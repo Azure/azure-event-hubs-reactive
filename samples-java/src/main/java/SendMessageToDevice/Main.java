@@ -7,11 +7,11 @@ import akka.NotUsed;
 import akka.stream.javadsl.Sink;
 import akka.stream.javadsl.Source;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.microsoft.azure.iot.iothubreact.MessageFromDevice;
-import com.microsoft.azure.iot.iothubreact.MessageToDevice;
-import com.microsoft.azure.iot.iothubreact.SourceOptions;
-import com.microsoft.azure.iot.iothubreact.filters.MessageSchema;
-import com.microsoft.azure.iot.iothubreact.javadsl.EventHub;
+import com.microsoft.azure.reactiveeventhubs.MessageFromDevice;
+import com.microsoft.azure.reactiveeventhubs.MessageToDevice;
+import com.microsoft.azure.reactiveeventhubs.SourceOptions;
+import com.microsoft.azure.reactiveeventhubs.filters.MessageSchema;
+import com.microsoft.azure.reactiveeventhubs.javadsl.EventHub;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;

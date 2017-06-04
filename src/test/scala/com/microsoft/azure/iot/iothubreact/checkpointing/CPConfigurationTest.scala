@@ -1,8 +1,8 @@
 // Copyright (c) Microsoft. All rights reserved.
 
-package com.microsoft.azure.iot.iothubreact.checkpointing
+package com.microsoft.azure.reactiveeventhubs.checkpointing
 
-import com.microsoft.azure.iot.iothubreact.checkpointing.backends.cassandra.lib.Auth
+import com.microsoft.azure.reactiveeventhubs.checkpointing.Backends.cassandra.lib.Auth
 import com.typesafe.config.{Config, ConfigException}
 import org.mockito.Mockito._
 import org.scalatest.mockito.MockitoSugar

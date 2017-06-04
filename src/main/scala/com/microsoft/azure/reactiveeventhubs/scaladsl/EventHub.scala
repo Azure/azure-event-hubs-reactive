@@ -1,0 +1,94 @@
+// Copyright (c) Microsoft. All rights reserved.
+
+package com.microsoft.azure.reactiveeventhubs.scaladsl
+
+import java.time.Instant
+
+import akka.NotUsed
+import akka.stream._
+import akka.stream.scaladsl._
+import com.microsoft.azure.reactiveeventhubs.config.{Configuration, IConfiguration}
+import com.microsoft.azure.reactiveeventhubs.{Logger, MessageFromDevice, SourceOptions, StreamManager}
+
+import scala.language.postfixOps
+
+object EventHub {
+  def apply(): EventHub = new EventHub()
+
+  def apply(config: IConfiguration): EventHub = new EventHub(config)
+}
+
+/** Provides a streaming source to retrieve messages from Azure IoT Hub
+  *
+  * TODO: Provide ClearCheckpoints() method to clear the state
+  */
+class EventHub(config: IConfiguration)
+  extends Logger {
+
+  // Parameterless ctor
+  def this() = this(Configuration())
+
+  private[this] val streamManager = new StreamManager
+
+  private[this] def allPartitions = Some(0 until config.connect.iotHubPartitions)
+
+  private[this] def fromStart = Some(List.fill[String](config.connect.iotHubPartitions)(EventHubPartition.OffsetStartOfStream))
+
+  /** Stop the stream
+    */
+  def close(): Unit = streamManager.close()
+
+  /** Stream returning all the messages from all the configured partitions.
+    * If checkpointing the stream starts from the last position saved, otherwise
+    * it starts from the beginning.
+    *
+    * @return A source of IoT messages
+    */
+  def source(): Source[MessageFromDevice, NotUsed] = source(SourceOptions().allPartitions.fromStart)
+
+  /** Stream returning all the messages from all the requested partitions.
+    * If checkpointing the stream starts from the last position saved, otherwise
+    * it starts from the beginning.
+    *
+    * @param partitions Partitions to process
+    *
+    * @return A source of IoT messages
+    */
+  def source(partitions: Seq[Int]): Source[MessageFromDevice, NotUsed] = source(SourceOptions().partitions(partitions))
+
+  /** Stream returning all the messages starting from the given time, from all
+    * the configured partitions.
+    *
+    * @param startTime Starting position expressed in time
+    *
+    * @return A source of IoT messages
+    */
+  def source(startTime: Instant): Source[MessageFromDevice, NotUsed] = source(SourceOptions().fromTime(startTime))
+
+  /** Stream returning all the messages, from the given starting point, optionally with
+    * checkpointing
+    *
+    * @return A source of IoT messages
+    */
+  def source(options: SourceOptions): Source[MessageFromDevice, NotUsed] = {
+
+    val partitions: Seq[Int] = options.getPartitions(config.connect)
+
+    val graph = GraphDSL.create() {
+      implicit b ⇒
+        import GraphDSL.Implicits._
+
+        val merge = b.add(Merge[MessageFromDevice](partitions.size))
+
+        for (partition ← partitions) {
+          val graph = EventHubPartition(config, partition).source(options).via(streamManager)
+          val source = Source.fromGraph(graph).async
+          source ~> merge
+        }
+
+        SourceShape(merge.out)
+    }
+
+    Source.fromGraph(graph)
+  }
+}

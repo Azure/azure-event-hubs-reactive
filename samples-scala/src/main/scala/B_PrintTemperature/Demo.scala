@@ -3,10 +3,10 @@
 package B_PrintTemperature
 
 import akka.stream.scaladsl.Sink
-import com.microsoft.azure.iot.iothubreact.MessageFromDevice
-import com.microsoft.azure.iot.iothubreact.ResumeOnError._
-import com.microsoft.azure.iot.iothubreact.filters.MessageSchema
-import com.microsoft.azure.iot.iothubreact.scaladsl._
+import com.microsoft.azure.reactiveeventhubs.MessageFromDevice
+import com.microsoft.azure.reactiveeventhubs.ResumeOnError._
+import com.microsoft.azure.reactiveeventhubs.scaladsl._
+import com.microsoft.azure.reactiveeventhubs.filters.MessageSchema
 import org.json4s._
 import org.json4s.jackson.JsonMethods._
 

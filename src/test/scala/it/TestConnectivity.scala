@@ -5,7 +5,7 @@ package it
 import java.time.Instant
 
 import com.microsoft.azure.eventhubs.{EventHubClient, PartitionReceiver}
-import com.microsoft.azure.iot.iothubreact.ResumeOnError._
+import com.microsoft.azure.reactiveeventhubs.ResumeOnError._
 import com.microsoft.azure.servicebus.ConnectionStringBuilder
 import it.helpers.{Configuration, Device}
 import org.scalatest._

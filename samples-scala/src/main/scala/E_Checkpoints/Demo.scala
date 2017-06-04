@@ -3,10 +3,11 @@
 package E_Checkpoints
 
 import akka.stream.scaladsl.Sink
-import com.microsoft.azure.iot.iothubreact.{MessageFromDevice, SourceOptions}
-import com.microsoft.azure.iot.iothubreact.ResumeOnError._
-import com.microsoft.azure.iot.iothubreact.filters.Device
-import com.microsoft.azure.iot.iothubreact.scaladsl._
+import com.microsoft.azure.reactiveeventhubs.MessageFromDevice
+import com.microsoft.azure.reactiveeventhubs.ResumeOnError._
+import com.microsoft.azure.reactiveeventhubs.filters.Device
+import com.microsoft.azure.reactiveeventhubs.scaladsl._
+import com.microsoft.azure.reactiveeventhubs.SourceOptions
 
 /** Retrieve messages from IoT hub and save the current position
   * In case of restart the stream starts from where it left

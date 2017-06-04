@@ -3,6 +3,9 @@
 // NOTE: Namespace chosen to avoid access to internal classes
 package api
 
+import com.microsoft.azure.reactiveeventhubs.SourceOptions
+import com.microsoft.azure.reactiveeventhubs.checkpointing.Backends.CheckpointBackend
+
 // NOTE: No global imports from the library, to make easier detecting breaking changes
 
 class APIIsBackwardCompatible
@@ -17,7 +20,7 @@ class APIIsBackwardCompatible
 
     Scenario("Using MessageFromDevice") {
       import com.microsoft.azure.eventhubs.{EventData, ReceiverRuntimeInformation}
-      import com.microsoft.azure.iot.iothubreact.MessageFromDevice
+      import com.microsoft.azure.reactiveeventhubs.MessageFromDevice
 
       val data: Option[EventData] = None
       val partition: Option[Int] = Some(1)
@@ -49,7 +52,7 @@ class APIIsBackwardCompatible
     Scenario("Using ResumeOnError") {
       import akka.actor.ActorSystem
       import akka.stream.ActorMaterializer
-      import com.microsoft.azure.iot.iothubreact.ResumeOnError._
+      import com.microsoft.azure.reactiveeventhubs.ResumeOnError._
 
       val as: ActorSystem = actorSystem
       val mat: ActorMaterializer = materializer
@@ -58,15 +61,14 @@ class APIIsBackwardCompatible
     Scenario("Using StopOnError") {
       import akka.actor.ActorSystem
       import akka.stream.ActorMaterializer
-      import com.microsoft.azure.iot.iothubreact.StopOnError._
+      import com.microsoft.azure.reactiveeventhubs.StopOnError._
 
       val as: ActorSystem = actorSystem
       val mat: ActorMaterializer = materializer
     }
 
     Scenario("Using CheckpointBackend") {
-      import com.microsoft.azure.iot.iothubreact.checkpointing.ICPConfiguration
-      import com.microsoft.azure.iot.iothubreact.checkpointing.backends.CheckpointBackend
+      import com.microsoft.azure.reactiveeventhubs.checkpointing.ICPConfiguration
       import org.mockito.Mockito.when
 
       class CustomBackend extends CheckpointBackend {
@@ -87,8 +89,8 @@ class APIIsBackwardCompatible
     }
 
     Scenario("Using Message Type") {
-      import com.microsoft.azure.iot.iothubreact.MessageFromDevice
-      import com.microsoft.azure.iot.iothubreact.filters.MessageSchema
+      import com.microsoft.azure.reactiveeventhubs.MessageFromDevice
+      import com.microsoft.azure.reactiveeventhubs.filters.MessageSchema
 
       val filter1: (MessageFromDevice) ⇒ Boolean = MessageSchema("some")
       val filter2: MessageSchema = new MessageSchema("some")
@@ -99,9 +101,9 @@ class APIIsBackwardCompatible
 
       import akka.NotUsed
       import akka.stream.scaladsl.Source
-      import com.microsoft.azure.iot.iothubreact.{MessageFromDevice, SourceOptions}
-      import com.microsoft.azure.iot.iothubreact.config.IConfiguration
-      import com.microsoft.azure.iot.iothubreact.scaladsl.EventHub
+      import com.microsoft.azure.reactiveeventhubs.MessageFromDevice
+      import com.microsoft.azure.reactiveeventhubs.config.IConfiguration
+      import com.microsoft.azure.reactiveeventhubs.scaladsl.EventHub
 
       val hub1: EventHub = EventHub()
       val hub2: EventHub = EventHub(mock[IConfiguration])
@@ -126,9 +128,9 @@ class APIIsBackwardCompatible
 
       import akka.NotUsed
       import akka.stream.javadsl.Source
-      import com.microsoft.azure.iot.iothubreact.{MessageFromDevice, SourceOptions}
-      import com.microsoft.azure.iot.iothubreact.config.IConfiguration
-      import com.microsoft.azure.iot.iothubreact.javadsl.EventHub
+      import com.microsoft.azure.reactiveeventhubs.MessageFromDevice
+      import com.microsoft.azure.reactiveeventhubs.config.IConfiguration
+      import com.microsoft.azure.reactiveeventhubs.javadsl.EventHub
 
       val hub1: EventHub = new EventHub()
       val hub2: EventHub = new EventHub(mock[IConfiguration])
@@ -149,7 +151,7 @@ class APIIsBackwardCompatible
     }
 
     Scenario("Using SourceOptions") {
-      import com.microsoft.azure.iot.iothubreact.SourceOptions
+      import com.microsoft.azure.reactiveeventhubs.SourceOptions
 
       val o: SourceOptions = SourceOptions()
         .fromStart

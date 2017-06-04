@@ -1,6 +1,6 @@
 // Copyright (c) Microsoft. All rights reserved.
 
-package com.microsoft.azure.iot.iothubreact.helpers
+package com.microsoft.azure.reactiveeventhubs.helpers
 
 import java.time.ZoneId
 

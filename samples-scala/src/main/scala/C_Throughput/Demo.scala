@@ -3,9 +3,9 @@
 package C_Throughput
 
 import akka.stream.scaladsl.Sink
-import com.microsoft.azure.iot.iothubreact.MessageFromDevice
-import com.microsoft.azure.iot.iothubreact.ResumeOnError._
-import com.microsoft.azure.iot.iothubreact.scaladsl._
+import com.microsoft.azure.reactiveeventhubs.MessageFromDevice
+import com.microsoft.azure.reactiveeventhubs.ResumeOnError._
+import com.microsoft.azure.reactiveeventhubs.scaladsl._
 
 import scala.concurrent.duration._
 import scala.language.postfixOps

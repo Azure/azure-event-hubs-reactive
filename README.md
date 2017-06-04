@@ -15,8 +15,8 @@ The library can be used both in Java and Scala, providing a fluent DSL for both
 programming languages, similarly to the approach used by Akka.
 
 The following is a simple example showing how to use the library in Scala. A
-stream of incoming telemetry data is read, parsed and converted to a `Temperature`
-object, and then filtered based on the temperature value:
+stream of incoming telemetry data is read, parsed and converted to a
+`Temperature` object, and then filtered based on the temperature value:
 
 ```scala
 EventHub().source()
@@ -198,12 +198,12 @@ Optionally you can reference environment settings if you prefer, for example to
 hide sensitive data.
 
 ```
-iothub-react {
+reactive-eventhubs {
 
   connection {
     hubName        = "<Event Hub compatible name>"
     hubEndpoint    = "<Event Hub compatible endpoint>"
-    hubPartitions  = <the number of partitions in your IoT Hub>
+    hubPartitions  = <the number of partitions in your Event Hub>
     accessPolicy   = "<access policy name>"
     accessKey      = "<access policy key>"
     accessHostName = "<access host name>"
@@ -216,15 +216,15 @@ iothub-react {
 Example using environment settings:
 
 ```
-iothub-react {
+reactive-eventhubs {
 
   connection {
-    hubName        = ${?IOTHUB_EVENTHUB_NAME}
-    hubEndpoint    = ${?IOTHUB_EVENTHUB_ENDPOINT}
-    hubPartitions  = ${?IOTHUB_EVENTHUB_PARTITIONS}
-    accessPolicy   = ${?IOTHUB_ACCESS_POLICY}
-    accessKey      = ${?IOTHUB_ACCESS_KEY}
-    accessHostName = ${?IOTHUB_ACCESS_HOSTNAME}
+    hubName        = ${?EVENTHUB_NAME}
+    hubEndpoint    = ${?EVENTHUB_ENDPOINT}
+    hubPartitions  = ${?EVENTHUB_PARTITIONS}
+    accessPolicy   = ${?EVENTHUB_ACCESS_POLICY}
+    accessKey      = ${?EVENTHUB_ACCESS_KEY}
+    accessHostName = ${?EVENTHUB_ACCESS_HOSTNAME}
   }
 
   [... other settings...]
@@ -253,58 +253,72 @@ There are other settings, to tune performance and connection details:
 * **streaming.consumerGroup**: the
   [consumer group](https://azure.microsoft.com/en-us/documentation/articles/event-hubs-overview)
   used during the connection
-* **streaming.receiverBatchSize**: the number of messages retrieved on each call to Azure IoT hub.
-  The default (and maximum) value is 999.
-* **streaming.receiverTimeout**: timeout applied to calls while retrieving messages. The default
-  value is 3 seconds.
-* **streaming.retrieveRuntimeInfo**: when enabled, the messages returned by `IoTHub.Source` will
-  contain some runtime information about the last message in each partition. You can use this
-  information to calculate how many telemetry events remain to process.
+* **streaming.receiverBatchSize**: the number of messages retrieved on each call
+  to Azure Event Hubs. The default (and maximum) value is 999.
+* **streaming.receiverTimeout**: timeout applied to calls while retrieving
+  messages. The default value is 3 seconds.
+* **streaming.retrieveRuntimeInfo**: when enabled, the messages returned by
+  `EventHub.Source` will contain some runtime information about the last message
+  in each partition. You can use this information to calculate how many
+  telemetry events remain to process.
 
 The complete configuration reference (and default values) is available in
 [reference.conf](src/main/resources/reference.conf).
 
 ## Samples
 
-The project includes several demos in Java and Scala, showing some of the use cases and how IoThub
-React API works. All the demos require an instance of Azure IoT hub, with some devices and messages.
+The project includes several demos in Java and Scala, showing some of the use
+cases and how the Reactive Event Hubs API works. All the demos require an
+instance of Azure Event Hubs, with some telemetry to stream.
 
-1. **DisplayMessages** [Java]: how to stream Azure IoT hub withing a Java application, filtering
-   temperature values greater than 60C
-1. **AllMessagesFromBeginning** [Scala]: simple example streaming all the events in the hub.
-1. **OnlyRecentMessages** [Scala]: stream all the events, starting from the current time.
-1. **OnlyTwoPartitions** [Scala]: shows how to stream events from a subset of partitions.
-1. **MultipleDestinations** [Scala]: shows how to read once and deliver events to multiple destinations.
+1. **DisplayMessages** [Java]: how to stream Azure Event Hubs telemetry within
+   a Java application, filtering temperature values greater than 60C
+1. **AllMessagesFromBeginning** [Scala]: simple example streaming all the events
+   in the hub.
+1. **OnlyRecentMessages** [Scala]: stream all the events, starting from the
+   current time.
+1. **OnlyTwoPartitions** [Scala]: shows how to stream events from a subset of
+   partitions.
+1. **MultipleDestinations** [Scala]: shows how to read once and deliver events
+   to multiple destinations.
 1. **CloseStream** [Scala]: show how to close the stream
-1. **PrintTemperature** [Scala]: stream all Temperature events and print data to the console.
-1. **Throughput** [Scala]: stream all events and display statistics about the throughput.
-1. **Throttling** [Scala]: throttle the incoming stream to a defined speed of events/second.
-1. **StoreOffsetsWhileStreaming** [Scala]: demonstrates how the stream can be restarted without losing its position.
-    The current position is stored in a Cassandra table (we suggest to run a docker container for
-    the purpose of the demo, e.g. `docker run -ip 9042:9042 --rm cassandra`).
-1. **StartFromStoredOffsetsButDontWriteNewOffsets** [Scala]: shows how to use the saved checkpoints
-    to start streaming from a known position, without changing the value in the storage. If the
-    storage doesn't contain checkpoints, the stream starts from the beginning.
-1. **StartFromStoredOffsetsIfAvailableOrByTimeOtherwise** [Scala]: similar to the previous
-    demo, with a fallback datetime when the storage doesn't contain checkpoints.
-1. **StreamIncludingRuntimeInformation** [Scala]: shows how runtime information works.
+1. **PrintTemperature** [Scala]: stream all Temperature events and print data to
+   the console.
+1. **Throughput** [Scala]: stream all events and display statistics about the
+   throughput.
+1. **Throttling** [Scala]: throttle the incoming stream to a defined speed of
+   events/second.
+1. **StoreOffsetsWhileStreaming** [Scala]: demonstrates how the stream can be
+   restarted without losing its position. The current position is stored in a
+   Cassandra table (we suggest to run a docker container for the purpose of the
+   demo, e.g. `docker run -ip 9042:9042 --rm cassandra`).
+1. **StartFromStoredOffsetsButDontWriteNewOffsets** [Scala]: shows how to use
+   the saved checkpoints to start streaming from a known position, without
+   changing the value in the storage. If the storage doesn't contain
+   checkpoints, the stream starts from the beginning.
+1. **StartFromStoredOffsetsIfAvailableOrByTimeOtherwise** [Scala]: similar to
+   the previous demo, with a fallback datetime when the storage doesn't contain
+   checkpoints.
+1. **StreamIncludingRuntimeInformation** [Scala]: shows how runtime information
+   works.
 
 When ready, you should either edit the `application.conf` configuration files
 ([scala](samples-scala/src/main/resources/application.conf) and
 [java](samples-java/src/main/resources/application.conf))
 with your credentials, or set the corresponding environment variables.
-Follow the instructions described in the previous section on how to set the correct values.
+Follow the instructions described in the previous section on how to set the
+correct values.
 
-The root folder includes also a script showing how to set the environment variables in
-[Linux/MacOS](setup-env-vars.sh) and [Windows](setup-env-vars.bat).
+The root folder includes also a script showing how to set the environment
+variables in [Linux/MacOS](setup-env-vars.sh) and [Windows](setup-env-vars.bat).
 
-The demos can be executed using the scripts included in the root folder (`run_<language>_samples.sh`
-and `run_<language>_samples.cmd`):
+The demos can be executed using the scripts included in the root folder
+(`run_<language>_samples.sh` and `run_<language>_samples.cmd`):
 
 * [`run_scala_samples.sh`](run_scala_samples.sh): execute Scala demos
 * [`run_java_samples.sh`](run_java_samples.sh): execute Java demos
 
-## Future work (MoSCoW)
+## Future work
 
 * support at-least-once when checkpointing
 * use EventHub SDK async APIs
@@ -321,7 +335,7 @@ bot will remind you about it when you submit a pull-request.
 
 If you are sending a pull request, please check the code style with IntelliJ
 IDEA, importing the settings from
-[`Codestyle.IntelliJ.xml`](https://github.com/Azure/toketi-iot-tools/blob/dev/Codestyle.IntelliJ.xml).
+[`Codestyle.IntelliJ.xml`](codestyle.intellij.xml).
 
 ## Running the tests
 
@@ -334,7 +348,7 @@ mentioned above in this page.
 
 [maven-badge]: https://img.shields.io/maven-central/v/com.microsoft.azure/reactive-event-hubs_2.12.svg
 [maven-url]: http://search.maven.org/#search%7Cga%7C1%7Ca%3A%22reactive-event-hubs_2.12%22
-[build-badge]: https://img.shields.io/travis/Azure/toketi-iothubreact.svg
+[build-badge]: https://img.shields.io/travis/Azure/reactive-event-hubs-java.svg
 [build-url]: https://travis-ci.org/Azure/reactive-event-hubs-java
 [issues-badge]: https://img.shields.io/github/issues/azure/reactive-event-hubs-java.svg?style=flat-square
 [issues-url]: https://github.com/azure/reactive-event-hubs-java/issues

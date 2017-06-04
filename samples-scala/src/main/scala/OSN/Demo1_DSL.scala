@@ -3,9 +3,9 @@
 package OSN.Demo.Simple
 
 import akka.stream.scaladsl.Sink
-import com.microsoft.azure.iot.iothubreact.MessageFromDevice
-import com.microsoft.azure.iot.iothubreact.scaladsl.EventHub
-import com.microsoft.azure.iot.iothubreact.ResumeOnError._
+import com.microsoft.azure.reactiveeventhubs.MessageFromDevice
+import com.microsoft.azure.reactiveeventhubs.scaladsl.EventHub
+import com.microsoft.azure.reactiveeventhubs.ResumeOnError._
 
 object Console {
 

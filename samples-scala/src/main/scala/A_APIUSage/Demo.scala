@@ -5,10 +5,12 @@ package A_APIUSage
 import java.time.Instant
 
 import akka.stream.scaladsl.Sink
-import com.microsoft.azure.iot.iothubreact.ResumeOnError._
-import com.microsoft.azure.iot.iothubreact.filters._
-import com.microsoft.azure.iot.iothubreact.scaladsl._
-import com.microsoft.azure.iot.iothubreact.{MessageFromDevice, MessageToDevice, SourceOptions}
+import com.microsoft.azure.reactiveeventhubs.ResumeOnError._
+import com.microsoft.azure.reactiveeventhubs.filters._
+import com.microsoft.azure.reactiveeventhubs.scaladsl._
+import com.microsoft.azure.reactiveeventhubs.{MessageFromDevice, SourceOptions}
+import com.microsoft.azure.reactiveeventhubs.{MessageToDevice, SourceOptions}
+import com.microsoft.azure.reactiveeventhubs.filters.MessageSchema
 import com.microsoft.azure.sdk.iot.service.DeliveryAcknowledgement
 
 import scala.concurrent.ExecutionContext.Implicits.global

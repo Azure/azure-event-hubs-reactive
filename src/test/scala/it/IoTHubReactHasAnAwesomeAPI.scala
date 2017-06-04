@@ -6,8 +6,8 @@ import java.time.Instant
 
 import akka.NotUsed
 import akka.stream.scaladsl.{Sink, Source}
-import com.microsoft.azure.iot.iothubreact.MessageFromDevice
-import com.microsoft.azure.iot.iothubreact.scaladsl.EventHub
+import com.microsoft.azure.reactiveeventhubs.MessageFromDevice
+import com.microsoft.azure.reactiveeventhubs.scaladsl.EventHub
 import org.scalatest._
 
 class IoTHubReactHasAnAwesomeAPI extends FeatureSpec with GivenWhenThen {

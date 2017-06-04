@@ -3,10 +3,10 @@
 package F_SendMessageToDevice
 
 import akka.stream.scaladsl.Flow
-import com.microsoft.azure.iot.iothubreact.MessageToDevice
-import com.microsoft.azure.iot.iothubreact.ResumeOnError._
-import com.microsoft.azure.iot.iothubreact.filters.MessageSchema
-import com.microsoft.azure.iot.iothubreact.scaladsl._
+import com.microsoft.azure.reactiveeventhubs.ResumeOnError._
+import com.microsoft.azure.reactiveeventhubs.scaladsl._
+import com.microsoft.azure.reactiveeventhubs.MessageToDevice
+import com.microsoft.azure.reactiveeventhubs.filters.MessageSchema
 
 import scala.language.{implicitConversions, postfixOps}
 

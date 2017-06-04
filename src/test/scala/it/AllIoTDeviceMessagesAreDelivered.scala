@@ -7,9 +7,10 @@ import java.time.Instant
 import akka.actor.Props
 import akka.pattern.ask
 import akka.stream.scaladsl.Sink
-import com.microsoft.azure.iot.iothubreact.{MessageFromDevice, SourceOptions}
-import com.microsoft.azure.iot.iothubreact.ResumeOnError._
-import com.microsoft.azure.iot.iothubreact.scaladsl.EventHub
+import com.microsoft.azure.reactiveeventhubs.MessageFromDevice
+import com.microsoft.azure.reactiveeventhubs.ResumeOnError._
+import com.microsoft.azure.reactiveeventhubs.scaladsl.EventHub
+import com.microsoft.azure.reactiveeventhubs.SourceOptions
 import it.helpers.{Counter, Device}
 import org.scalatest._
 

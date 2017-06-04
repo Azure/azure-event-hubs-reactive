@@ -3,10 +3,12 @@
 package OSN.Demo.Checkpoints
 
 import akka.stream.scaladsl.Sink
-import com.microsoft.azure.iot.iothubreact.{MessageFromDevice, SourceOptions}
-import com.microsoft.azure.iot.iothubreact.filters.{Device, MessageSchema}
-import com.microsoft.azure.iot.iothubreact.scaladsl.EventHub
-import com.microsoft.azure.iot.iothubreact.ResumeOnError._
+import com.microsoft.azure.reactiveeventhubs.MessageFromDevice
+import com.microsoft.azure.reactiveeventhubs.filters.Device
+import com.microsoft.azure.reactiveeventhubs.scaladsl.EventHub
+import com.microsoft.azure.reactiveeventhubs.ResumeOnError._
+import com.microsoft.azure.reactiveeventhubs.SourceOptions
+import com.microsoft.azure.reactiveeventhubs.filters.MessageSchema
 
 object Console {
 

@@ -2,7 +2,7 @@
 
 package A_APIUSage
 
-import com.microsoft.azure.iot.iothubreact.MessageFromDevice
+import com.microsoft.azure.reactiveeventhubs.MessageFromDevice
 import org.json4s.DefaultFormats
 import org.json4s.jackson.JsonMethods.parse
 
