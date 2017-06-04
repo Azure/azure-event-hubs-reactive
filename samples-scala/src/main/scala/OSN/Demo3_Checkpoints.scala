@@ -5,7 +5,7 @@ package OSN.Demo.Checkpoints
 import akka.stream.scaladsl.Sink
 import com.microsoft.azure.iot.iothubreact.{MessageFromDevice, SourceOptions}
 import com.microsoft.azure.iot.iothubreact.filters.{Device, MessageSchema}
-import com.microsoft.azure.iot.iothubreact.scaladsl.IoTHub
+import com.microsoft.azure.iot.iothubreact.scaladsl.EventHub
 import com.microsoft.azure.iot.iothubreact.ResumeOnError._
 
 object Console {
@@ -20,7 +20,7 @@ object Console {
 
 object Demo extends App {
 
-  IoTHub()
+  EventHub()
 
     .source(SourceOptions().saveOffsets()) // <===
 

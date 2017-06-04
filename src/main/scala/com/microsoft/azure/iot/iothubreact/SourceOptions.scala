@@ -5,7 +5,7 @@ package com.microsoft.azure.iot.iothubreact
 import java.time.Instant
 
 import com.microsoft.azure.iot.iothubreact.config.IConnectConfiguration
-import com.microsoft.azure.iot.iothubreact.scaladsl.IoTHubPartition
+import com.microsoft.azure.iot.iothubreact.scaladsl.EventHubPartition
 
 import scala.collection.JavaConverters._
 import scala.reflect.ClassTag
@@ -192,7 +192,7 @@ class SourceOptions() {
 
   private[iothubreact] def getStartOffsets(config: IConnectConfiguration): Seq[String] = {
     if (!_isFromOffsets)
-      List.fill[String](config.iotHubPartitions)(IoTHubPartition.OffsetStartOfStream)
+      List.fill[String](config.iotHubPartitions)(EventHubPartition.OffsetStartOfStream)
     else {
       if (_startOffsets.get.size != config.iotHubPartitions)
         throw new RuntimeException(s"The number of stream offsets [${_startOffsets.get.size}] " +

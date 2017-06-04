@@ -11,7 +11,7 @@ import com.microsoft.azure.iot.iothubreact.MessageFromDevice;
 import com.microsoft.azure.iot.iothubreact.MessageToDevice;
 import com.microsoft.azure.iot.iothubreact.SourceOptions;
 import com.microsoft.azure.iot.iothubreact.filters.MessageSchema;
-import com.microsoft.azure.iot.iothubreact.javadsl.IoTHub;
+import com.microsoft.azure.iot.iothubreact.javadsl.EventHub;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -29,8 +29,8 @@ public class Main extends ReactiveStreamingApp
 
     public static void main(String args[])
     {
-        // IoTHub
-        IoTHub hub = new IoTHub();
+        // EventHub
+        EventHub hub = new EventHub();
 
         // Source retrieving from all IoT hub partitions for the past 24 hours and saving the current position
         SourceOptions options = new SourceOptions()

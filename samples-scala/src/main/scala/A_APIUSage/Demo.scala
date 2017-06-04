@@ -21,7 +21,7 @@ object AllMessagesFromBeginning extends App {
 
   println("Streaming all the messages")
 
-  val messages = IoTHub().source()
+  val messages = EventHub().source()
 
   val console = Sink.foreach[MessageFromDevice] {
     m ⇒ println(s"${m.received} - ${m.deviceId} - ${m.messageSchema} - ${m.contentAsString}")
@@ -40,7 +40,7 @@ object OnlyRecentMessages extends App {
 
   println("Streaming recent messages")
 
-  val messages = IoTHub().source(java.time.Instant.now())
+  val messages = EventHub().source(java.time.Instant.now())
 
   val console = Sink.foreach[MessageFromDevice] {
     m ⇒ println(s"${m.received} - ${m.deviceId} - ${m.messageSchema} - ${m.contentAsString}")
@@ -62,7 +62,7 @@ object OnlyTwoPartitions extends App {
 
   println(s"Streaming messages from partitions ${Partition1} and ${Partition2}")
 
-  val messages = IoTHub().source(Seq(Partition1, Partition2))
+  val messages = EventHub().source(Seq(Partition1, Partition2))
 
   val console = Sink.foreach[MessageFromDevice] {
     m ⇒ println(s"${m.received} - ${m.deviceId} - ${m.messageSchema} - ${m.contentAsString}")
@@ -81,7 +81,7 @@ object StoreOffsetsWhileStreaming extends App {
 
   println(s"Streaming messages and save offsets while streaming")
 
-  val messages = IoTHub().source(SourceOptions().saveOffsets())
+  val messages = EventHub().source(SourceOptions().saveOffsets())
 
   val console = Sink.foreach[MessageFromDevice] {
     m ⇒ println(s"${m.received} - ${m.deviceId} - ${m.messageSchema} - ${m.contentAsString}")
@@ -100,7 +100,7 @@ object StartFromStoredOffsetsButDontWriteNewOffsets extends App {
 
   println(s"Streaming messages from a saved position, without updating the position stored")
 
-  val messages = IoTHub().source(SourceOptions().fromSavedOffsets())
+  val messages = EventHub().source(SourceOptions().fromSavedOffsets())
 
   val console = Sink.foreach[MessageFromDevice] {
     m ⇒ println(s"${m.received} - ${m.deviceId} - ${m.messageSchema} - ${m.contentAsString}")
@@ -120,7 +120,7 @@ object StartFromStoredOffsetsIfAvailableOrByTimeOtherwise extends App {
 
   println(s"Streaming messages from a saved position, without updating the position stored. If there is no position saved, start from one hour in the past.")
 
-  val messages = IoTHub().source(SourceOptions().fromSavedOffsets(Instant.now().minusSeconds(3600)))
+  val messages = EventHub().source(SourceOptions().fromSavedOffsets(Instant.now().minusSeconds(3600)))
 
   val console = Sink.foreach[MessageFromDevice] {
     m ⇒ println(s"${m.received} - ${m.deviceId} - ${m.messageSchema} - ${m.contentAsString}")
@@ -137,7 +137,7 @@ object StreamIncludingRuntimeInformation extends App {
 
   println(s"Stream messages and print how many messages are left in each partition.")
 
-  val messages = IoTHub().source(SourceOptions().fromStart().withRuntimeInfo())
+  val messages = EventHub().source(SourceOptions().fromStart().withRuntimeInfo())
 
   val console = Sink.foreach[MessageFromDevice] {
     m ⇒ println(s"Partition ${m.runtimeInfo.partitionInfo.partitionNumber.get}: " +
@@ -160,7 +160,7 @@ object MultipleStreamingOptionsAndSyntaxSugar extends App {
     .fromOffsets("614", "64365", "123512")
     .saveOffsets()
 
-  val messages = IoTHub().source(options)
+  val messages = EventHub().source(options)
 
   val console = Sink.foreach[MessageFromDevice] {
     m ⇒ println(s"${m.received} - ${m.deviceId} - ${m.messageSchema} - ${m.contentAsString}")
@@ -179,7 +179,7 @@ object MultipleDestinations extends App {
 
   println("Streaming to two different consoles")
 
-  val messages = IoTHub().source(java.time.Instant.now())
+  val messages = EventHub().source(java.time.Instant.now())
 
   val console1 = Sink.foreach[MessageFromDevice] {
     m ⇒ if (m.messageSchema == "temperature") println(s"Temperature console: ${m.received} - ${m.deviceId} - ${m.contentAsString}")
@@ -204,7 +204,7 @@ object FilterByMessageSchema extends App {
 
   println("Streaming only temperature messages")
 
-  val messages = IoTHub().source()
+  val messages = EventHub().source()
 
   val console = Sink.foreach[MessageFromDevice] {
     m ⇒ println(s"${m.received} - ${m.deviceId} - ${m.messageSchema} - ${m.contentAsString}")
@@ -227,7 +227,7 @@ object FilterByDeviceID extends App {
 
   println(s"Streaming only messages from ${DeviceID}")
 
-  val messages = IoTHub().source()
+  val messages = EventHub().source()
 
   val console = Sink.foreach[MessageFromDevice] {
     m ⇒ println(s"${m.received} - ${m.deviceId} - ${m.messageSchema} - ${m.contentAsString}")
@@ -253,7 +253,7 @@ object CloseStream extends App {
     hub.close()
   }
 
-  val hub      = IoTHub()
+  val hub      = EventHub()
   val messages = hub.source()
 
   var console = Sink.foreach[MessageFromDevice] {
@@ -273,7 +273,7 @@ object SendMessageToDevice extends App with Deserialize {
     .expiry(Instant.now().plusSeconds(30))
     .ack(DeliveryAcknowledgement.Full)
 
-  val hub = IoTHub()
+  val hub = EventHub()
 
   hub
     .source(java.time.Instant.now())

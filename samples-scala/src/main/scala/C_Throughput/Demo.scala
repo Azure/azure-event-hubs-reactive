@@ -29,7 +29,7 @@ object Demo extends App {
   }
 
   // Start processing the stream
-  IoTHub().source
+  EventHub().source
     .to(monitor)
     .run()
 

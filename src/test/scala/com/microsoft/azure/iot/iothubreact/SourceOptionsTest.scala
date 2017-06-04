@@ -5,7 +5,7 @@ package com.microsoft.azure.iot.iothubreact
 import java.time.Instant
 
 import com.microsoft.azure.iot.iothubreact.config.IConnectConfiguration
-import com.microsoft.azure.iot.iothubreact.scaladsl.IoTHubPartition
+import com.microsoft.azure.iot.iothubreact.scaladsl.EventHubPartition
 import org.mockito.Mockito._
 import org.scalatest.FeatureSpec
 import org.scalatest.mockito.MockitoSugar
@@ -27,7 +27,7 @@ class SourceOptionsTest extends FeatureSpec with MockitoSugar {
       assert(o.getStartTime.isEmpty)
       assert(o.getStartTimeOnNoCheckpoint.isEmpty)
       assert(o.getStartOffsets(conf).size == pcount)
-      assert(o.getStartOffsets(conf).filter(x ⇒ x == IoTHubPartition.OffsetStartOfStream).size == pcount)
+      assert(o.getStartOffsets(conf).filter(x ⇒ x == EventHubPartition.OffsetStartOfStream).size == pcount)
       assert(o.isFromStart)
       assert(!o.isSaveOffsets)
       assert(!o.isFromSavedOffsets)
@@ -41,7 +41,7 @@ class SourceOptionsTest extends FeatureSpec with MockitoSugar {
       val o: SourceOptions = SourceOptions().partitions(1, 3, 5)
       assert(o.getPartitions(conf) == Seq(1, 3, 5))
       assert(o.getStartOffsets(conf).size == pcount)
-      assert(o.getStartOffsets(conf).filter(x ⇒ x == IoTHubPartition.OffsetStartOfStream).size == pcount)
+      assert(o.getStartOffsets(conf).filter(x ⇒ x == EventHubPartition.OffsetStartOfStream).size == pcount)
 
       o.partitions(Seq(1, 2, 4))
       assert(o.getPartitions(conf) == Seq(1, 2, 4))
@@ -49,7 +49,7 @@ class SourceOptionsTest extends FeatureSpec with MockitoSugar {
       o.allPartitions()
       assert(o.getPartitions(conf) == (0 until pcount))
       assert(o.getStartOffsets(conf).size == pcount)
-      assert(o.getStartOffsets(conf).filter(x ⇒ x == IoTHubPartition.OffsetStartOfStream).size == pcount)
+      assert(o.getStartOffsets(conf).filter(x ⇒ x == EventHubPartition.OffsetStartOfStream).size == pcount)
     }
 
     Scenario("Streaming from the start") {
@@ -59,7 +59,7 @@ class SourceOptionsTest extends FeatureSpec with MockitoSugar {
       assert(!o.isFromTime)
       assert(!o.isFromOffsets)
       assert(o.getStartOffsets(conf).size == pcount)
-      assert(o.getStartOffsets(conf).filter(x ⇒ x == IoTHubPartition.OffsetStartOfStream).size == pcount)
+      assert(o.getStartOffsets(conf).filter(x ⇒ x == EventHubPartition.OffsetStartOfStream).size == pcount)
 
       o.fromTime(Instant.now).fromStart
       assert(o.isFromStart)
@@ -67,7 +67,7 @@ class SourceOptionsTest extends FeatureSpec with MockitoSugar {
       assert(!o.isFromTime)
       assert(!o.isFromOffsets)
       assert(o.getStartOffsets(conf).size == pcount)
-      assert(o.getStartOffsets(conf).filter(x ⇒ x == IoTHubPartition.OffsetStartOfStream).size == pcount)
+      assert(o.getStartOffsets(conf).filter(x ⇒ x == EventHubPartition.OffsetStartOfStream).size == pcount)
     }
 
     Scenario("Streaming from some datetime") {

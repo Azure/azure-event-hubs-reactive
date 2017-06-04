@@ -9,7 +9,7 @@ import akka.actor.{Actor, Stash}
 import com.microsoft.azure.iot.iothubreact.Logger
 import com.microsoft.azure.iot.iothubreact.checkpointing.CheckpointService.{GetOffset, StoreOffset, UpdateOffset}
 import com.microsoft.azure.iot.iothubreact.checkpointing.backends.{AzureBlob, CassandraTable, CheckpointBackend}
-import com.microsoft.azure.iot.iothubreact.scaladsl.IoTHubPartition
+import com.microsoft.azure.iot.iothubreact.scaladsl.EventHubPartition
 
 import scala.concurrent.ExecutionContext
 
@@ -45,7 +45,7 @@ private[iothubreact] class CheckpointService(cpconfig: ICPConfiguration, partiti
   private[this] val queue                     = new scala.collection.mutable.Queue[OffsetsData]
   // Count the offsets tracked in the queue (!= queue.size)
   private[this] var queuedOffsets   : Long    = 0
-  private[this] var currentOffset   : String  = IoTHubPartition.OffsetStartOfStream
+  private[this] var currentOffset   : String  = EventHubPartition.OffsetStartOfStream
   private[this] val storage                   = getCheckpointBackend
   private[this] var schedulerStarted: Boolean = false
 
@@ -59,7 +59,7 @@ private[iothubreact] class CheckpointService(cpconfig: ICPConfiguration, partiti
         stash()
         log.debug("Retrieving partition {} offset from the storage", partition)
         val offset = storage.readOffset(partition)
-        if (offset != IoTHubPartition.OffsetCheckpointNotFound) {
+        if (offset != EventHubPartition.OffsetCheckpointNotFound) {
           currentOffset = offset
         }
         log.debug("Offset retrieved for partition {}: {}", partition, currentOffset)

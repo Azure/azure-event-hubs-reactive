@@ -5,7 +5,7 @@ package OSN.Demo.More
 import akka.stream.scaladsl.Sink
 import com.microsoft.azure.iot.iothubreact.MessageFromDevice
 import com.microsoft.azure.iot.iothubreact.filters.{Device, MessageSchema}
-import com.microsoft.azure.iot.iothubreact.scaladsl.IoTHub
+import com.microsoft.azure.iot.iothubreact.scaladsl.EventHub
 import com.microsoft.azure.iot.iothubreact.ResumeOnError._
 
 object Console {
@@ -32,7 +32,7 @@ object Storage {
 
 object Demo extends App {
 
-  IoTHub()
+  EventHub()
 
     .source(java.time.Instant.now()) // <===
 

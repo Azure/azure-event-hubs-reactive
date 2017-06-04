@@ -6,7 +6,7 @@ import com.microsoft.azure.iot.iothubreact.Logger
 import com.microsoft.azure.iot.iothubreact.checkpointing.ICPConfiguration
 import com.microsoft.azure.iot.iothubreact.checkpointing.backends.cassandra.lib.Connection
 import com.microsoft.azure.iot.iothubreact.checkpointing.backends.cassandra.{CheckpointRecord, CheckpointsTableSchema}
-import com.microsoft.azure.iot.iothubreact.scaladsl.IoTHubPartition
+import com.microsoft.azure.iot.iothubreact.scaladsl.EventHubPartition
 import org.json4s.JsonAST
 
 /** Storage logic to write checkpoints to a Cassandra table
@@ -30,7 +30,7 @@ private[iothubreact] class CassandraTable(cpconfig: ICPConfiguration) extends Ch
     val result: JsonAST.JObject = table.select(s"partition = ${partition}")
 
     if (result.values("partition").asInstanceOf[BigInt] < 0) {
-      IoTHubPartition.OffsetCheckpointNotFound
+      EventHubPartition.OffsetCheckpointNotFound
     } else {
       result.values("offset").asInstanceOf[String]
     }

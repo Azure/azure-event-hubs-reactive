@@ -7,7 +7,7 @@ import java.net.URISyntaxException
 import java.util.UUID
 
 import com.microsoft.azure.iot.iothubreact.checkpointing.ICPConfiguration
-import com.microsoft.azure.iot.iothubreact.scaladsl.IoTHubPartition
+import com.microsoft.azure.iot.iothubreact.scaladsl.EventHubPartition
 import com.microsoft.azure.iot.iothubreact.{Logger, Retry}
 import com.microsoft.azure.storage.blob.CloudBlockBlob
 import com.microsoft.azure.storage.{AccessCondition, CloudStorageAccount, OperationContext, StorageException}
@@ -60,7 +60,7 @@ private[iothubreact] class AzureBlob(cpconfig: ICPConfiguration) extends Checkpo
     } catch {
       case e: StorageException ⇒
         if (e.getErrorCode == "BlobNotFound") {
-          IoTHubPartition.OffsetCheckpointNotFound
+          EventHubPartition.OffsetCheckpointNotFound
         } else {
           log.error(e, s"Err: ${e.getMessage}; Code: ${e.getErrorCode}; Status: ${e.getHttpStatusCode}")
           throw e

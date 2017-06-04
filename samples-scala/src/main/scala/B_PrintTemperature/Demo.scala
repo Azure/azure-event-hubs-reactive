@@ -28,7 +28,7 @@ object Demo extends App {
     temperature
   }
 
-  val messages = IoTHub().source()
+  val messages = EventHub().source()
 
   // Sink printing to the console
   val console = Sink.foreach[Temperature] {

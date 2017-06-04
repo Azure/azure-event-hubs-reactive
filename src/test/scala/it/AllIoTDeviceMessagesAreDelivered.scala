@@ -9,7 +9,7 @@ import akka.pattern.ask
 import akka.stream.scaladsl.Sink
 import com.microsoft.azure.iot.iothubreact.{MessageFromDevice, SourceOptions}
 import com.microsoft.azure.iot.iothubreact.ResumeOnError._
-import com.microsoft.azure.iot.iothubreact.scaladsl.IoTHub
+import com.microsoft.azure.iot.iothubreact.scaladsl.EventHub
 import it.helpers.{Counter, Device}
 import org.scalatest._
 
@@ -55,7 +55,7 @@ class AllIoTDeviceMessagesAreDelivered extends FeatureSpec with GivenWhenThen {
         log.info("Test run: {}, Start time: {}", testRunId, startTime)
 
         Given("An IoT hub is configured")
-        val hub = IoTHub()
+        val hub = EventHub()
         val messages = hub.source(SourceOptions().fromTime(startTime))
 
         And(s"${DevicesCount} devices have sent ${MessagesPerDevice} messages each")

@@ -9,12 +9,12 @@ import akka.stream.javadsl.{Sink, Source ⇒ JavaSource}
 import akka.{Done, NotUsed}
 import com.microsoft.azure.iot.iothubreact._
 import com.microsoft.azure.iot.iothubreact.config.{Configuration, IConfiguration}
-import com.microsoft.azure.iot.iothubreact.scaladsl.{IoTHub ⇒ IoTHubScalaDSL}
+import com.microsoft.azure.iot.iothubreact.scaladsl.{EventHub ⇒ IoTHubScalaDSL}
 import com.microsoft.azure.iot.iothubreact.sinks.{DevicePropertiesSink, MessageToDeviceSink, MethodOnDeviceSink}
 
 /** Provides a streaming source to retrieve messages from Azure IoT Hub
   */
-class IoTHub(config: IConfiguration) {
+class EventHub(config: IConfiguration) {
 
   // Parameterless ctor
   def this() = this(Configuration())

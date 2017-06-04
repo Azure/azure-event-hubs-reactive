@@ -7,7 +7,7 @@ import java.time.Instant
 import akka.NotUsed
 import akka.stream.scaladsl.{Sink, Source}
 import com.microsoft.azure.iot.iothubreact.MessageFromDevice
-import com.microsoft.azure.iot.iothubreact.scaladsl.IoTHub
+import com.microsoft.azure.iot.iothubreact.scaladsl.EventHub
 import org.scalatest._
 
 class IoTHubReactHasAnAwesomeAPI extends FeatureSpec with GivenWhenThen {
@@ -21,7 +21,7 @@ class IoTHubReactHasAnAwesomeAPI extends FeatureSpec with GivenWhenThen {
     Scenario("Developer wants to retrieve IoT messages") {
 
       Given("An IoT hub is configured")
-      val hub = IoTHub()
+      val hub = EventHub()
 
       When("A developer wants to fetch messages from Azure IoT hub")
       val messagesFromAllPartitions: Source[MessageFromDevice, NotUsed] = hub.source()

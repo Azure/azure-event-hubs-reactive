@@ -19,7 +19,7 @@ import scala.concurrent.Await
 import scala.concurrent.duration._
 import scala.language.{implicitConversions, postfixOps}
 
-object IoTHubPartition extends Logger {
+object EventHubPartition extends Logger {
 
   // Public constant: offset position used to start reading from the beginning
   final val OffsetStartOfStream: String = PartitionReceiver.START_OF_STREAM
@@ -34,7 +34,7 @@ object IoTHubPartition extends Logger {
   * @param partition IoT hub partition number (0-based). The number of
   *                  partitions is set during the deployment.
   */
-private[iothubreact] case class IoTHubPartition(config: IConfiguration, val partition: Int) extends Logger {
+private[iothubreact] case class EventHubPartition(config: IConfiguration, val partition: Int) extends Logger {
 
   /** Create a stream returning all the messages for the defined partition, from the given start
     * point, optionally with checkpointing
@@ -54,7 +54,7 @@ private[iothubreact] case class IoTHubPartition(config: IConfiguration, val part
                         } else if (options.getStartTimeOnNoCheckpoint.isEmpty) {
                           // The user didn't provide a start time for missing
                           // checkpoints, so let's start from the beginning
-                          Some(IoTHubPartition.OffsetStartOfStream)
+                          Some(EventHubPartition.OffsetStartOfStream)
                         } else {
                           // The user didn't provide a start time for missing
                           // checkpoints, but provided a start time for such case
@@ -64,7 +64,7 @@ private[iothubreact] case class IoTHubPartition(config: IConfiguration, val part
                       }
 
     // Define the start point offset
-    val startOffsets = if (options.isFromStart) Some(IoTHubPartition.OffsetStartOfStream)
+    val startOffsets = if (options.isFromStart) Some(EventHubPartition.OffsetStartOfStream)
                        else if (options.isFromOffsets) Some(options.getStartOffsets(config.connect)(partition))
                        else if (options.isFromSavedOffsets) savedOffset
                        else if (options.isFromTime) None
@@ -108,7 +108,7 @@ private[iothubreact] case class IoTHubPartition(config: IConfiguration, val part
         log.debug("Loading the stream offset for partition {}", partition)
         val future = (partitionCp ? GetOffset).mapTo[String]
         val offset = Await.result(future, rwTimeout.duration)
-        if (offset != IoTHubPartition.OffsetCheckpointNotFound) Some(offset) else None
+        if (offset != EventHubPartition.OffsetCheckpointNotFound) Some(offset) else None
       }
     } catch {
       case e: java.util.concurrent.TimeoutException ⇒

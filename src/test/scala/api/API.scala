@@ -94,17 +94,17 @@ class APIIsBackwardCompatible
       val filter2: MessageSchema = new MessageSchema("some")
     }
 
-    Scenario("Using Scala DSL IoTHub") {
+    Scenario("Using Scala DSL EventHub") {
       import java.time.Instant
 
       import akka.NotUsed
       import akka.stream.scaladsl.Source
       import com.microsoft.azure.iot.iothubreact.{MessageFromDevice, SourceOptions}
       import com.microsoft.azure.iot.iothubreact.config.IConfiguration
-      import com.microsoft.azure.iot.iothubreact.scaladsl.IoTHub
+      import com.microsoft.azure.iot.iothubreact.scaladsl.EventHub
 
-      val hub1: IoTHub = IoTHub()
-      val hub2: IoTHub = IoTHub(mock[IConfiguration])
+      val hub1: EventHub = EventHub()
+      val hub2: EventHub = EventHub(mock[IConfiguration])
 
       val partitions = Seq(0, 1, 3)
       val options = SourceOptions()
@@ -121,17 +121,17 @@ class APIIsBackwardCompatible
       hub2.close()
     }
 
-    Scenario("Using Java DSL IoTHub") {
+    Scenario("Using Java DSL EventHub") {
       import java.time.Instant
 
       import akka.NotUsed
       import akka.stream.javadsl.Source
       import com.microsoft.azure.iot.iothubreact.{MessageFromDevice, SourceOptions}
       import com.microsoft.azure.iot.iothubreact.config.IConfiguration
-      import com.microsoft.azure.iot.iothubreact.javadsl.IoTHub
+      import com.microsoft.azure.iot.iothubreact.javadsl.EventHub
 
-      val hub1: IoTHub = new IoTHub()
-      val hub2: IoTHub = new IoTHub(mock[IConfiguration])
+      val hub1: EventHub = new EventHub()
+      val hub2: EventHub = new EventHub(mock[IConfiguration])
 
       val partitions: java.util.List[java.lang.Integer] = java.util.Arrays.asList(0, 1, 3)
       val options = new SourceOptions()

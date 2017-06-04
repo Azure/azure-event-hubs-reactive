@@ -35,7 +35,7 @@ object Demo extends App {
 
   println(s"Streaming messages at ${maxSpeed} msg/sec")
 
-  IoTHub().source
+  EventHub().source
     .to(throttleAndMonitor)
     .run()
 

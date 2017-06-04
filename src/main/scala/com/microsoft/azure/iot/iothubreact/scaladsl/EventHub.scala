@@ -14,17 +14,17 @@ import com.microsoft.azure.iot.iothubreact.sinks.{DevicePropertiesSink, MessageT
 import scala.concurrent.Future
 import scala.language.postfixOps
 
-object IoTHub {
-  def apply(): IoTHub = new IoTHub()
+object EventHub {
+  def apply(): EventHub = new EventHub()
 
-  def apply(config: IConfiguration): IoTHub = new IoTHub(config)
+  def apply(config: IConfiguration): EventHub = new EventHub(config)
 }
 
 /** Provides a streaming source to retrieve messages from Azure IoT Hub
   *
   * TODO: Provide ClearCheckpoints() method to clear the state
   */
-class IoTHub(config: IConfiguration)
+class EventHub(config: IConfiguration)
   extends Logger {
 
   // Parameterless ctor
@@ -34,7 +34,7 @@ class IoTHub(config: IConfiguration)
 
   private[this] def allPartitions = Some(0 until config.connect.iotHubPartitions)
 
-  private[this] def fromStart = Some(List.fill[String](config.connect.iotHubPartitions)(IoTHubPartition.OffsetStartOfStream))
+  private[this] def fromStart = Some(List.fill[String](config.connect.iotHubPartitions)(EventHubPartition.OffsetStartOfStream))
 
   /** Stop the stream
     */
@@ -113,7 +113,7 @@ class IoTHub(config: IConfiguration)
         val merge = b.add(Merge[MessageFromDevice](partitions.size))
 
         for (partition ← partitions) {
-          val graph = IoTHubPartition(config, partition).source(options).via(streamManager)
+          val graph = EventHubPartition(config, partition).source(options).via(streamManager)
           val source = Source.fromGraph(graph).async
           source ~> merge
         }

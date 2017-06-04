@@ -15,7 +15,7 @@ object Demo extends App with Deserialize {
   val turnFanOn  = MessageToDevice("Turn fan ON")
   val turnFanOff = MessageToDevice("Turn fan OFF")
 
-  val hub = IoTHub()
+  val hub = EventHub()
 
   // Source
   val temperatures = hub

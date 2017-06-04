@@ -12,7 +12,7 @@ import com.microsoft.azure.iot.iothubreact.sinks._
 
 import scala.concurrent.Future
 
-/** Type class to support different classes of communication through IoTHub
+/** Type class to support different classes of communication through EventHub
   *
   * @tparam A
   */
