@@ -38,9 +38,9 @@ class ConnectConfiguration(configData: Config) extends IConnectConfiguration {
 
   private[this] val confConnPath = "eventhub-react.connection."
 
-  lazy val eventHubNamespace  = getNamespaceFromEndpoint(configData.getString(confConnPath + "hubEndpoint"))
-  lazy val eventHubName       = configData.getString(confConnPath + "hubName")
-  lazy val eventHubPartitions = configData.getInt(confConnPath + "hubPartitions")
+  lazy val eventHubNamespace  = getNamespaceFromEndpoint(configData.getString(confConnPath + "eventHubEndpoint"))
+  lazy val eventHubName       = configData.getString(confConnPath + "eventHubName")
+  lazy val eventHubPartitions = configData.getInt(confConnPath + "eventHubPartitions")
   lazy val accessPolicy     = configData.getString(confConnPath + "accessPolicy")
   lazy val accessKey        = configData.getString(confConnPath + "accessKey")
 

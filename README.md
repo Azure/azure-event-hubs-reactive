@@ -20,8 +20,6 @@ stream of incoming telemetry data is read, parsed and converted to a
 
 ```scala
 EventHub().source()
-    .map(m ⇒ parse(m.contentAsString).extract[Temperature])
-    .filter(_.value > 100)
     .to(console)
     .run()
 ```
@@ -32,8 +30,6 @@ and the equivalent code in Java:
 TypeReference<Temperature> type = new TypeReference<Temperature>() {};
 
 new EventHub().source()
-    .map(m -> (Temperature) jsonParser.readValue(m.contentAsString(), type))
-    .filter(x -> x.value > 100)
     .to(console())
     .run(streamMaterializer);
 ```
@@ -70,8 +66,6 @@ case class KafkaProducer(bootstrapServer: String)(implicit val system: ActorSyst
 val kafkaProducer = KafkaProducer(bootstrapServer)
 
 EventHub().source()
-    .map(m ⇒ parse(m.contentAsString).extract[Temperature])
-    .filter(_.value > 100)
     .runWith(kafkaProducer.getSink())
 ```
 
@@ -90,8 +84,6 @@ val p1 = 0
 val p2 = 3
 
 EventHub().source(Seq(p1, p2))
-    .map(m ⇒ parse(m.contentAsString).extract[Temperature])
-    .filter(_.value > 100)
     .to(console)
     .run()
 ```
@@ -106,8 +98,6 @@ too:
 val start = java.time.Instant.now()
 
 EventHub().source(start)
-    .map(m ⇒ parse(m.contentAsString).extract[Temperature])
-    .filter(_.value > 100)
     .to(console)
     .run()
 ```
@@ -126,8 +116,6 @@ val options = SourceOptions()
   .saveOffsets()
 
 EventHub().source(options)
-    .map(m ⇒ parse(m.contentAsString).extract[Temperature])
-    .filter(_.value > 100)
     .to(console)
     .run()
 ```
@@ -186,12 +174,11 @@ authentication values to use, can be found in the
 
 Properties required to receive telemetry:
 
-* **hubName**: see `Endpoints` ⇒ `Messaging` ⇒ `Events` ⇒ `Event Hub-compatible name`
-* **hubEndpoint**: see `Endpoints` ⇒ `Messaging` ⇒ `Events` ⇒ `Event Hub-compatible endpoint`
-* **hubPartitions**: see `Endpoints` ⇒ `Messaging` ⇒ `Events` ⇒ `Partitions`
-* **accessPolicy**: usually `service`, see `Shared access policies`
-* **accessKey**: see `Shared access policies` ⇒ `key name` ⇒ `Primary key` (it's
-  a base64 encoded string)
+* **eventHubName**:
+* **eventHubEndpoint**:
+* **eventHubPartitions**:
+* **accessPolicy**:
+* **accessKey**:
 
 The values should be stored in your `application.conf` resource (or equivalent).
 Optionally you can reference environment settings if you prefer, for example to
@@ -201,12 +188,11 @@ hide sensitive data.
 reactive-eventhubs {
 
   connection {
-    hubName        = "<Event Hub compatible name>"
-    hubEndpoint    = "<Event Hub compatible endpoint>"
-    hubPartitions  = <the number of partitions in your Event Hub>
+    eventHubName        = "<Event Hub name>"
+    eventHubEndpoint    = "<Event Hub endpoint>"
+    eventHubPartitions  = <the number of partitions in your Event Hub>
     accessPolicy   = "<access policy name>"
     accessKey      = "<access policy key>"
-    accessHostName = "<access host name>"
   }
 
   [... other settings...]
@@ -219,12 +205,11 @@ Example using environment settings:
 reactive-eventhubs {
 
   connection {
-    hubName        = ${?EVENTHUB_NAME}
-    hubEndpoint    = ${?EVENTHUB_ENDPOINT}
-    hubPartitions  = ${?EVENTHUB_PARTITIONS}
+    eventHubName        = ${?EVENTHUB_NAME}
+    eventHubEndpoint    = ${?EVENTHUB_ENDPOINT}
+    eventHubPartitions  = ${?EVENTHUB_PARTITIONS}
     accessPolicy   = ${?EVENTHUB_ACCESS_POLICY}
     accessKey      = ${?EVENTHUB_ACCESS_KEY}
-    accessHostName = ${?EVENTHUB_ACCESS_HOSTNAME}
   }
 
   [... other settings...]
@@ -272,7 +257,7 @@ cases and how the Reactive Event Hubs API works. All the demos require an
 instance of Azure Event Hubs, with some telemetry to stream.
 
 1. **DisplayMessages** [Java]: how to stream Azure Event Hubs telemetry within
-   a Java application, filtering temperature values greater than 60C
+   a Java application
 1. **AllMessagesFromBeginning** [Scala]: simple example streaming all the events
    in the hub.
 1. **OnlyRecentMessages** [Scala]: stream all the events, starting from the
@@ -282,8 +267,6 @@ instance of Azure Event Hubs, with some telemetry to stream.
 1. **MultipleDestinations** [Scala]: shows how to read once and deliver events
    to multiple destinations.
 1. **CloseStream** [Scala]: show how to close the stream
-1. **PrintTemperature** [Scala]: stream all Temperature events and print data to
-   the console.
 1. **Throughput** [Scala]: stream all events and display statistics about the
    throughput.
 1. **Throttling** [Scala]: throttle the incoming stream to a defined speed of
