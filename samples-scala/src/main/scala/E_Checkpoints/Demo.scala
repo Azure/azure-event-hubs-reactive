@@ -18,7 +18,7 @@ import com.microsoft.azure.reactiveeventhubs.SourceOptions
 object Demo extends App {
 
   val console = Sink.foreach[EventHubsMessage] {
-    t ⇒ println(s"Message - Time: ${t.received}")
+    m ⇒ println(s"enqueued-time: ${m.received}, offset: ${m.offset}, payload: ${m.contentAsString}")
   }
 
   // Stream using checkpointing

@@ -11,17 +11,13 @@ import com.microsoft.azure.reactiveeventhubs.SourceOptions
 object Console {
 
   def apply() = Sink.foreach[EventHubsMessage] {
-
-    m ⇒ println(
-      s"${m.received} "
-        + s" - ${m.contentAsString}")
+    m ⇒ println(s"enqueued-time: ${m.received}, offset: ${m.offset}, payload: ${m.contentAsString}")
   }
 }
 
 object Demo extends App {
 
   EventHub()
-
     .source(SourceOptions().saveOffsets()) // <===
     .to(Console())
     .run()

@@ -16,7 +16,7 @@ import scala.language.postfixOps
 object Monitoring {
 
   // Auxiliary vars
-  private[this] val eventHubPartitions    = ConfigFactory.load().getInt("eventhub-react.connection.hubPartitions")
+  private[this] val eventHubPartitions    = ConfigFactory.load().getInt("eventhub-react.connection.eventHubPartitions")
   private[this] var previousTime : Long = 0
   private[this] var previousTotal: Long = 0
 

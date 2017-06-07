@@ -10,21 +10,14 @@ import com.microsoft.azure.reactiveeventhubs.ResumeOnError._
 object Console {
 
   def apply() = Sink.foreach[EventHubsMessage] {
-
-    m ⇒ println(
-      s"${m.received} "
-        + s" - ${m.contentAsString}")
-
+    m ⇒ println(s"enqueued-time: ${m.received}, offset: ${m.offset}, payload: ${m.contentAsString}")
   }
 }
 
 object Demo extends App {
 
   EventHub()
-
     .source()
-
     .to(Console())
-
     .run()
 }

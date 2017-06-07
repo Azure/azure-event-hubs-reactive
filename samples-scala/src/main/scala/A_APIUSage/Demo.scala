@@ -25,9 +25,7 @@ object AllMessagesFromBeginning extends App {
   }
 
   messages
-
     .to(console)
-
     .run()
 }
 
@@ -40,13 +38,11 @@ object OnlyRecentMessages extends App {
   val messages = EventHub().source(java.time.Instant.now())
 
   val console = Sink.foreach[EventHubsMessage] {
-    m ⇒ println(s"${m.received} - ${m.contentAsString}")
+    m ⇒ println(s"enqueued-time: ${m.received}, offset: ${m.offset}, payload: ${m.contentAsString}")
   }
 
   messages
-
     .to(console)
-
     .run()
 }
 
@@ -55,20 +51,18 @@ object OnlyRecentMessages extends App {
 object OnlyTwoPartitions extends App {
 
   val Partition1 = 0
-  val Partition2 = 3
+  val Partition2 = 1
 
   println(s"Streaming messages from partitions ${Partition1} and ${Partition2}")
 
   val messages = EventHub().source(Seq(Partition1, Partition2))
 
   val console = Sink.foreach[EventHubsMessage] {
-    m ⇒ println(s"${m.received} - ${m.contentAsString}")
+    m ⇒ println(s"enqueued-time: ${m.received}, offset: ${m.offset}, payload: ${m.contentAsString}")
   }
 
   messages
-
     .to(console)
-
     .run()
 }
 
@@ -81,13 +75,11 @@ object StoreOffsetsWhileStreaming extends App {
   val messages = EventHub().source(SourceOptions().saveOffsets())
 
   val console = Sink.foreach[EventHubsMessage] {
-    m ⇒ println(s"${m.received} - ${m.contentAsString}")
+    m ⇒ println(s"enqueued-time: ${m.received}, offset: ${m.offset}, payload: ${m.contentAsString}")
   }
 
   messages
-
     .to(console)
-
     .run()
 }
 
@@ -100,13 +92,11 @@ object StartFromStoredOffsetsButDontWriteNewOffsets extends App {
   val messages = EventHub().source(SourceOptions().fromSavedOffsets())
 
   val console = Sink.foreach[EventHubsMessage] {
-    m ⇒ println(s"${m.received} - ${m.contentAsString}")
+    m ⇒ println(s"enqueued-time: ${m.received}, offset: ${m.offset}, payload: ${m.contentAsString}")
   }
 
   messages
-
     .to(console)
-
     .run()
 }
 
@@ -120,13 +110,11 @@ object StartFromStoredOffsetsIfAvailableOrByTimeOtherwise extends App {
   val messages = EventHub().source(SourceOptions().fromSavedOffsets(Instant.now().minusSeconds(3600)))
 
   val console = Sink.foreach[EventHubsMessage] {
-    m ⇒ println(s"${m.received} - ${m.contentAsString}")
+    m ⇒ println(s"enqueued-time: ${m.received}, offset: ${m.offset}, payload: ${m.contentAsString}")
   }
 
   messages
-
     .to(console)
-
     .run()
 }
 
@@ -142,9 +130,7 @@ object StreamIncludingRuntimeInformation extends App {
   }
 
   messages
-
     .to(console)
-
     .run()
 }
 
@@ -153,20 +139,18 @@ object MultipleStreamingOptionsAndSyntaxSugar extends App {
   println(s"Streaming messages and save position")
 
   val options = SourceOptions()
-    .partitions(0, 2, 3)
-    .fromOffsets("614", "64365", "123512")
+    .partitions(0, 1)
+    .fromOffsets("614", "64365")
     .saveOffsets()
 
   val messages = EventHub().source(options)
 
   val console = Sink.foreach[EventHubsMessage] {
-    m ⇒ println(s"${m.received} - ${m.contentAsString}")
+    m ⇒ println(s"enqueued-time: ${m.received}, offset: ${m.offset}, payload: ${m.contentAsString}")
   }
 
   messages
-
     .to(console)
-
     .run()
 }
 
@@ -179,19 +163,16 @@ object MultipleDestinations extends App {
   val messages = EventHub().source(java.time.Instant.now())
 
   val console1 = Sink.foreach[EventHubsMessage] {
-    m ⇒ println(s"Temperature console: ${m.received} - ${m.contentAsString}")
+    m ⇒ println(s"[Console-1] enqueued-time: ${m.received}, offset: ${m.offset}, payload: ${m.contentAsString}")
   }
 
   val console2 = Sink.foreach[EventHubsMessage] {
-    m ⇒ println(s"Humidity console: ${m.received} - ${m.contentAsString}")
+    m ⇒ println(s"[Console-2] enqueued-time: ${m.received}, offset: ${m.offset}, payload: ${m.contentAsString}")
   }
 
   messages
-
     .alsoTo(console1)
-
     .to(console2)
-
     .run()
 }
 
@@ -211,7 +192,7 @@ object CloseStream extends App {
   val messages = hub.source()
 
   var console = Sink.foreach[EventHubsMessage] {
-    m ⇒ println(s"${m.received} - ${m.contentAsString}")
+    m ⇒ println(s"enqueued-time: ${m.received}, offset: ${m.offset}, payload: ${m.contentAsString}")
   }
 
   messages.to(console).run()
