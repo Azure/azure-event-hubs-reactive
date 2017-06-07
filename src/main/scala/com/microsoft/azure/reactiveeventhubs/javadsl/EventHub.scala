@@ -8,7 +8,7 @@ import akka.NotUsed
 import akka.stream.javadsl.{Source ⇒ JavaSource}
 import com.microsoft.azure.reactiveeventhubs.config.{Configuration, IConfiguration}
 import com.microsoft.azure.reactiveeventhubs.scaladsl.{EventHub => EventHubDsl}
-import com.microsoft.azure.reactiveeventhubs.{EventHubMessage, SourceOptions}
+import com.microsoft.azure.reactiveeventhubs.{EventHubsMessage, SourceOptions}
 
 /** Provides a streaming source to retrieve messages from Azure Event Hub
   */
@@ -28,7 +28,7 @@ class EventHub(config: IConfiguration) {
     *
     * @return A source of Event hub messages
     */
-  def source(): JavaSource[EventHubMessage, NotUsed] = new JavaSource(eventHub.source())
+  def source(): JavaSource[EventHubsMessage, NotUsed] = new JavaSource(eventHub.source())
 
   /** Stream returning all the messages from all the requested partitions.
     * If checkpointing the stream starts from the last position saved, otherwise
@@ -38,7 +38,7 @@ class EventHub(config: IConfiguration) {
     *
     * @return A source of Event hub messages
     */
-  def source(partitions: java.util.List[java.lang.Integer]): JavaSource[EventHubMessage, NotUsed] = {
+  def source(partitions: java.util.List[java.lang.Integer]): JavaSource[EventHubsMessage, NotUsed] = {
     new JavaSource(eventHub.source(SourceOptions().partitions(partitions)))
   }
 
@@ -49,7 +49,7 @@ class EventHub(config: IConfiguration) {
     *
     * @return A source of Event hub messages
     */
-  def source(startTime: Instant): JavaSource[EventHubMessage, NotUsed] = {
+  def source(startTime: Instant): JavaSource[EventHubsMessage, NotUsed] = {
     new JavaSource(eventHub.source(startTime))
   }
 
@@ -59,7 +59,7 @@ class EventHub(config: IConfiguration) {
     *
     * @return A source of Event hub messages
     */
-  def source(options: SourceOptions): JavaSource[EventHubMessage, NotUsed] = {
+  def source(options: SourceOptions): JavaSource[EventHubsMessage, NotUsed] = {
     new JavaSource(eventHub.source(options))
   }
 }

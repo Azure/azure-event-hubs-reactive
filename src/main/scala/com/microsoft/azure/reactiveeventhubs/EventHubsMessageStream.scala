@@ -15,7 +15,7 @@ import scala.collection.JavaConverters._
 import scala.concurrent.duration._
 import scala.language.{implicitConversions, postfixOps}
 
-private object EventHubMessageSource {
+private object EventHubsMessageStream {
 
   /** Create an instance of the messages source for the specified partition
     *
@@ -25,8 +25,8 @@ private object EventHubMessageSource {
     * @return A source returning the body of the message sent from a device.
     *         Deserialization is left to the consumer.
     */
-  def apply(config: IConfiguration, partition: Int, offset: String): Source[EventHubMessage, NotUsed] = {
-    Source.fromGraph(new EventHubMessageSource(config, partition, offset))
+  def apply(config: IConfiguration, partition: Int, offset: String): Source[EventHubsMessage, NotUsed] = {
+    Source.fromGraph(new EventHubsMessageStream(config, partition, offset))
   }
 
   /** Create an instance of the messages source for the specified partition
@@ -37,14 +37,14 @@ private object EventHubMessageSource {
     * @return A source returning the body of the message sent from a device.
     *         Deserialization is left to the consumer.
     */
-  def apply(config: IConfiguration, partition: Int, startTime: Instant): Source[EventHubMessage, NotUsed] = {
-    Source.fromGraph(new EventHubMessageSource(config, partition, startTime))
+  def apply(config: IConfiguration, partition: Int, startTime: Instant): Source[EventHubsMessage, NotUsed] = {
+    Source.fromGraph(new EventHubsMessageStream(config, partition, startTime))
   }
 }
 
 /** Source of messages from one partition of the EventHubs service
   */
-private class EventHubMessageSource(config: IConfiguration) extends GraphStage[SourceShape[EventHubMessage]] with Logger {
+private class EventHubsMessageStream(config: IConfiguration) extends GraphStage[SourceShape[EventHubsMessage]] with Logger {
 
   /** Source of messages from one partition of the EventHubs service
     *
@@ -96,10 +96,10 @@ private class EventHubMessageSource(config: IConfiguration) extends GraphStage[S
   private[this] def startTime: Instant = _startTime.get
 
   // Define the (sole) output port of this stage
-  private[this] val out: Outlet[EventHubMessage] = Outlet("EventHubMessageSource")
+  private[this] val out: Outlet[EventHubsMessage] = Outlet("EventHubsMessageStream")
 
   // Define the shape of this stage ⇒ SourceShape with the port defined above
-  override val shape: SourceShape[EventHubMessage] = SourceShape(out)
+  override val shape: SourceShape[EventHubsMessage] = SourceShape(out)
 
   // All state MUST be inside the GraphStageLogic, never inside the enclosing
   // GraphStage. This state is safe to read/write from all the callbacks
@@ -108,8 +108,8 @@ private class EventHubMessageSource(config: IConfiguration) extends GraphStage[S
     log.debug("Creating the Event hub source")
     new GraphStageLogic(shape) {
 
-      val keepAliveSignal = new EventHubMessage(None, None, None)
-      val emptyResult     = List[EventHubMessage](keepAliveSignal)
+      val keepAliveSignal = new EventHubsMessage(None, None, None)
+      val emptyResult     = List[EventHubsMessage](keepAliveSignal)
 
       lazy val receiver = getEventHubReceiver()
 
@@ -128,7 +128,7 @@ private class EventHubMessageSource(config: IConfiguration) extends GraphStage[S
                 emitMultiple(out, emptyResult)
               } else {
                 val partitionInfo: ReceiverRuntimeInformation = receiver.getRuntimeInformation
-                val iterator = messages.asScala.map(e ⇒ EventHubMessage(e, Some(partition), Some(partitionInfo))).toList
+                val iterator = messages.asScala.map(e ⇒ EventHubsMessage(e, Some(partition), Some(partitionInfo))).toList
                 log.debug("Emitting {} messages", iterator.size)
                 emitMultiple(out, iterator)
               }
@@ -155,7 +155,7 @@ private class EventHubMessageSource(config: IConfiguration) extends GraphStage[S
 
           case SequenceOffset ⇒
             log.info("Connecting to partition {} starting from offset '{}'", partition, offset)
-            EventHubStorage(config.connect)
+            EventHubsConnector(config.connect)
               .createClient()
               .createReceiverSync(
                 config.streaming.receiverConsumerGroup,
@@ -166,7 +166,7 @@ private class EventHubMessageSource(config: IConfiguration) extends GraphStage[S
 
           case TimeOffset ⇒
             log.info("Connecting to partition {} starting from time '{}'", partition, startTime)
-            EventHubStorage(config.connect)
+            EventHubsConnector(config.connect)
               .createClient()
               .createReceiverSync(
                 config.streaming.receiverConsumerGroup,

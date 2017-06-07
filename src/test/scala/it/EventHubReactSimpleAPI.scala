@@ -6,7 +6,7 @@ import java.time.Instant
 
 import akka.NotUsed
 import akka.stream.scaladsl.{Sink, Source}
-import com.microsoft.azure.reactiveeventhubs.EventHubMessage
+import com.microsoft.azure.reactiveeventhubs.EventHubsMessage
 import com.microsoft.azure.reactiveeventhubs.scaladsl.EventHub
 import org.scalatest._
 
@@ -24,8 +24,8 @@ class EventHubReactSimpleAPI extends FeatureSpec with GivenWhenThen {
       val hub = EventHub()
 
       When("A developer wants to fetch messages from Azure Event hub")
-      val messagesFromAllPartitions: Source[EventHubMessage, NotUsed] = hub.source()
-      val messagesFromNowOn: Source[EventHubMessage, NotUsed] = hub.source(Instant.now())
+      val messagesFromAllPartitions: Source[EventHubsMessage, NotUsed] = hub.source()
+      val messagesFromNowOn: Source[EventHubsMessage, NotUsed] = hub.source(Instant.now())
 
       Then("The messages are presented as a stream")
       messagesFromAllPartitions.to(Sink.ignore)

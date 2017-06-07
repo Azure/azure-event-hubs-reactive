@@ -3,13 +3,13 @@
 package OSN.Demo.Simple
 
 import akka.stream.scaladsl.Sink
-import com.microsoft.azure.reactiveeventhubs.EventHubMessage
+import com.microsoft.azure.reactiveeventhubs.EventHubsMessage
 import com.microsoft.azure.reactiveeventhubs.scaladsl.EventHub
 import com.microsoft.azure.reactiveeventhubs.ResumeOnError._
 
 object Console {
 
-  def apply() = Sink.foreach[EventHubMessage] {
+  def apply() = Sink.foreach[EventHubsMessage] {
 
     m ⇒ println(
       s"${m.received} "

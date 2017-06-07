@@ -8,7 +8,7 @@ import akka.NotUsed
 import akka.stream._
 import akka.stream.scaladsl._
 import com.microsoft.azure.reactiveeventhubs.config.{Configuration, IConfiguration}
-import com.microsoft.azure.reactiveeventhubs.{Logger, EventHubMessage, SourceOptions, StreamManager}
+import com.microsoft.azure.reactiveeventhubs.{Logger, EventHubsMessage, SourceOptions, StreamManager}
 
 import scala.language.postfixOps
 
@@ -43,7 +43,7 @@ class EventHub(config: IConfiguration)
     *
     * @return A source of Event Hub messages
     */
-  def source(): Source[EventHubMessage, NotUsed] = source(SourceOptions().allPartitions.fromStart)
+  def source(): Source[EventHubsMessage, NotUsed] = source(SourceOptions().allPartitions.fromStart)
 
   /** Stream returning all the messages from all the requested partitions.
     * If checkpointing the stream starts from the last position saved, otherwise
@@ -53,7 +53,7 @@ class EventHub(config: IConfiguration)
     *
     * @return A source of Event Hubs messages
     */
-  def source(partitions: Seq[Int]): Source[EventHubMessage, NotUsed] = source(SourceOptions().partitions(partitions))
+  def source(partitions: Seq[Int]): Source[EventHubsMessage, NotUsed] = source(SourceOptions().partitions(partitions))
 
   /** Stream returning all the messages starting from the given time, from all
     * the configured partitions.
@@ -62,14 +62,14 @@ class EventHub(config: IConfiguration)
     *
     * @return A source of Event Hubs messages
     */
-  def source(startTime: Instant): Source[EventHubMessage, NotUsed] = source(SourceOptions().fromTime(startTime))
+  def source(startTime: Instant): Source[EventHubsMessage, NotUsed] = source(SourceOptions().fromTime(startTime))
 
   /** Stream returning all the messages, from the given starting point, optionally with
     * checkpointing
     *
     * @return A source of Event Hubs messages
     */
-  def source(options: SourceOptions): Source[EventHubMessage, NotUsed] = {
+  def source(options: SourceOptions): Source[EventHubsMessage, NotUsed] = {
 
     val partitions: Seq[Int] = options.getPartitions(config.connect)
 
@@ -77,7 +77,7 @@ class EventHub(config: IConfiguration)
       implicit b ⇒
         import GraphDSL.Implicits._
 
-        val merge = b.add(Merge[EventHubMessage](partitions.size))
+        val merge = b.add(Merge[EventHubsMessage](partitions.size))
 
         for (partition ← partitions) {
           val graph = EventHubPartition(config, partition).source(options).via(streamManager)

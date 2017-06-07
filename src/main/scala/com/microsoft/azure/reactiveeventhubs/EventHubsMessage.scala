@@ -11,7 +11,7 @@ import scala.collection.JavaConverters._
 import scala.language.{implicitConversions, postfixOps}
 
 /* MessageFromDevice factory */
-private object EventHubMessage {
+private object EventHubsMessage {
 
   /** Create a user friendly representation of the Event hub message from the raw
     * data coming from the storage
@@ -25,8 +25,8 @@ private object EventHubMessage {
   def apply(
       rawData: EventData,
       partitionNumber: Option[Int],
-      partitionInfo: Option[ReceiverRuntimeInformation]): EventHubMessage = {
-    new EventHubMessage(Some(rawData), partitionNumber, partitionInfo)
+      partitionInfo: Option[ReceiverRuntimeInformation]): EventHubsMessage = {
+    new EventHubsMessage(Some(rawData), partitionNumber, partitionInfo)
   }
 }
 
@@ -35,7 +35,7 @@ private object EventHubMessage {
   * @param partNumber Storage partition where the message was retrieved from
   * @param partInfo   Information about the partition, e.g. about the last message
   */
-class EventHubMessage(
+class EventHubsMessage(
     data: Option[EventData],
     partNumber: Option[Int],
     partInfo: Option[ReceiverRuntimeInformation]) {

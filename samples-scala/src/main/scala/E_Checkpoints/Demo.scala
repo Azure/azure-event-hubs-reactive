@@ -3,7 +3,7 @@
 package E_Checkpoints
 
 import akka.stream.scaladsl.Sink
-import com.microsoft.azure.reactiveeventhubs.EventHubMessage
+import com.microsoft.azure.reactiveeventhubs.EventHubsMessage
 import com.microsoft.azure.reactiveeventhubs.ResumeOnError._
 import com.microsoft.azure.reactiveeventhubs.scaladsl._
 import com.microsoft.azure.reactiveeventhubs.SourceOptions
@@ -17,7 +17,7 @@ import com.microsoft.azure.reactiveeventhubs.SourceOptions
   */
 object Demo extends App {
 
-  val console = Sink.foreach[EventHubMessage] {
+  val console = Sink.foreach[EventHubsMessage] {
     t ⇒ println(s"Message - Time: ${t.received}")
   }
 

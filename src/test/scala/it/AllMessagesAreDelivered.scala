@@ -7,7 +7,7 @@ import java.time.Instant
 import akka.actor.Props
 import akka.pattern.ask
 import akka.stream.scaladsl.Sink
-import com.microsoft.azure.reactiveeventhubs.EventHubMessage
+import com.microsoft.azure.reactiveeventhubs.EventHubsMessage
 import com.microsoft.azure.reactiveeventhubs.ResumeOnError._
 import com.microsoft.azure.reactiveeventhubs.scaladsl.EventHub
 import com.microsoft.azure.reactiveeventhubs.SourceOptions
@@ -73,7 +73,7 @@ class AllMessagesAreDelivered extends FeatureSpec with GivenWhenThen {
 
         When("A client application processes messages from the stream")
         counter ! "reset"
-        val count = Sink.foreach[EventHubMessage] {
+        val count = Sink.foreach[EventHubsMessage] {
           m ⇒ counter ! "inc"
         }
 

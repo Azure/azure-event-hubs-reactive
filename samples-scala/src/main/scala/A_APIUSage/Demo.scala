@@ -7,7 +7,7 @@ import java.time.Instant
 import akka.stream.scaladsl.Sink
 import com.microsoft.azure.reactiveeventhubs.ResumeOnError._
 import com.microsoft.azure.reactiveeventhubs.scaladsl._
-import com.microsoft.azure.reactiveeventhubs.{EventHubMessage, SourceOptions}
+import com.microsoft.azure.reactiveeventhubs.{EventHubsMessage, SourceOptions}
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration._
 import scala.language.{implicitConversions, postfixOps}
@@ -20,8 +20,8 @@ object AllMessagesFromBeginning extends App {
 
   val messages = EventHub().source()
 
-  val console = Sink.foreach[EventHubMessage] {
-    m ⇒ println(s"${m.received} - ${m.contentAsString}")
+  val console = Sink.foreach[EventHubsMessage] {
+    m ⇒ println(s"enqueued-time: ${m.received}, offset: ${m.offset}, payload: ${m.contentAsString}")
   }
 
   messages
@@ -39,7 +39,7 @@ object OnlyRecentMessages extends App {
 
   val messages = EventHub().source(java.time.Instant.now())
 
-  val console = Sink.foreach[EventHubMessage] {
+  val console = Sink.foreach[EventHubsMessage] {
     m ⇒ println(s"${m.received} - ${m.contentAsString}")
   }
 
@@ -61,7 +61,7 @@ object OnlyTwoPartitions extends App {
 
   val messages = EventHub().source(Seq(Partition1, Partition2))
 
-  val console = Sink.foreach[EventHubMessage] {
+  val console = Sink.foreach[EventHubsMessage] {
     m ⇒ println(s"${m.received} - ${m.contentAsString}")
   }
 
@@ -80,7 +80,7 @@ object StoreOffsetsWhileStreaming extends App {
 
   val messages = EventHub().source(SourceOptions().saveOffsets())
 
-  val console = Sink.foreach[EventHubMessage] {
+  val console = Sink.foreach[EventHubsMessage] {
     m ⇒ println(s"${m.received} - ${m.contentAsString}")
   }
 
@@ -99,7 +99,7 @@ object StartFromStoredOffsetsButDontWriteNewOffsets extends App {
 
   val messages = EventHub().source(SourceOptions().fromSavedOffsets())
 
-  val console = Sink.foreach[EventHubMessage] {
+  val console = Sink.foreach[EventHubsMessage] {
     m ⇒ println(s"${m.received} - ${m.contentAsString}")
   }
 
@@ -119,7 +119,7 @@ object StartFromStoredOffsetsIfAvailableOrByTimeOtherwise extends App {
 
   val messages = EventHub().source(SourceOptions().fromSavedOffsets(Instant.now().minusSeconds(3600)))
 
-  val console = Sink.foreach[EventHubMessage] {
+  val console = Sink.foreach[EventHubsMessage] {
     m ⇒ println(s"${m.received} - ${m.contentAsString}")
   }
 
@@ -136,7 +136,7 @@ object StreamIncludingRuntimeInformation extends App {
 
   val messages = EventHub().source(SourceOptions().fromStart().withRuntimeInfo())
 
-  val console = Sink.foreach[EventHubMessage] {
+  val console = Sink.foreach[EventHubsMessage] {
     m ⇒ println(s"Partition ${m.runtimeInfo.partitionInfo.partitionNumber.get}: " +
       s"${m.runtimeInfo.partitionInfo.lastSequenceNumber.get - m.sequenceNumber} messages left to stream")
   }
@@ -159,7 +159,7 @@ object MultipleStreamingOptionsAndSyntaxSugar extends App {
 
   val messages = EventHub().source(options)
 
-  val console = Sink.foreach[EventHubMessage] {
+  val console = Sink.foreach[EventHubsMessage] {
     m ⇒ println(s"${m.received} - ${m.contentAsString}")
   }
 
@@ -178,11 +178,11 @@ object MultipleDestinations extends App {
 
   val messages = EventHub().source(java.time.Instant.now())
 
-  val console1 = Sink.foreach[EventHubMessage] {
+  val console1 = Sink.foreach[EventHubsMessage] {
     m ⇒ println(s"Temperature console: ${m.received} - ${m.contentAsString}")
   }
 
-  val console2 = Sink.foreach[EventHubMessage] {
+  val console2 = Sink.foreach[EventHubsMessage] {
     m ⇒ println(s"Humidity console: ${m.received} - ${m.contentAsString}")
   }
 
@@ -210,7 +210,7 @@ object CloseStream extends App {
   val hub      = EventHub()
   val messages = hub.source()
 
-  var console = Sink.foreach[EventHubMessage] {
+  var console = Sink.foreach[EventHubsMessage] {
     m ⇒ println(s"${m.received} - ${m.contentAsString}")
   }
 

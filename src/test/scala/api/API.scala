@@ -20,14 +20,14 @@ class APIIsBackwardCompatible
 
     Scenario("Using MessageFromDevice") {
       import com.microsoft.azure.eventhubs.{EventData, ReceiverRuntimeInformation}
-      import com.microsoft.azure.reactiveeventhubs.EventHubMessage
+      import com.microsoft.azure.reactiveeventhubs.EventHubsMessage
 
       val data: Option[EventData] = None
       val partition: Option[Int] = Some(1)
 
       // Test properties
       val partitionInfo = Some(new ReceiverRuntimeInformation(partition.toString))
-      val message1 = new EventHubMessage(data, partition, partitionInfo)
+      val message1 = new EventHubsMessage(data, partition, partitionInfo)
       lazy val properties: java.util.Map[String, String] = message1.properties
       lazy val created: java.time.Instant = message1.received
       lazy val offset: String = message1.offset
@@ -36,10 +36,10 @@ class APIIsBackwardCompatible
       lazy val contentAsString: String = message1.contentAsString
 
       // Named parameters
-      val message2: EventHubMessage = new EventHubMessage(data = data, partNumber = partition, partInfo = partitionInfo)
+      val message2: EventHubsMessage = new EventHubsMessage(data = data, partNumber = partition, partInfo = partitionInfo)
 
       // Keepalive
-      val message3: EventHubMessage = new EventHubMessage(data, partNumber = None, partInfo = None)
+      val message3: EventHubsMessage = new EventHubsMessage(data, partNumber = None, partInfo = None)
     }
 
     Scenario("Using ResumeOnError") {
@@ -86,7 +86,7 @@ class APIIsBackwardCompatible
 
       import akka.NotUsed
       import akka.stream.scaladsl.Source
-      import com.microsoft.azure.reactiveeventhubs.EventHubMessage
+      import com.microsoft.azure.reactiveeventhubs.EventHubsMessage
       import com.microsoft.azure.reactiveeventhubs.config.IConfiguration
       import com.microsoft.azure.reactiveeventhubs.scaladsl.EventHub
 
@@ -96,7 +96,7 @@ class APIIsBackwardCompatible
       val partitions = Seq(0, 1, 3)
       val options = SourceOptions()
 
-      var source: Source[EventHubMessage, NotUsed] = hub1.source()
+      var source: Source[EventHubsMessage, NotUsed] = hub1.source()
       source = hub1.source(partitions)
       source = hub1.source(partitions = partitions)
       source = hub1.source(Instant.now())
@@ -113,7 +113,7 @@ class APIIsBackwardCompatible
 
       import akka.NotUsed
       import akka.stream.javadsl.Source
-      import com.microsoft.azure.reactiveeventhubs.EventHubMessage
+      import com.microsoft.azure.reactiveeventhubs.EventHubsMessage
       import com.microsoft.azure.reactiveeventhubs.config.IConfiguration
       import com.microsoft.azure.reactiveeventhubs.javadsl.EventHub
 
@@ -123,7 +123,7 @@ class APIIsBackwardCompatible
       val partitions: java.util.List[java.lang.Integer] = java.util.Arrays.asList(0, 1, 3)
       val options = new SourceOptions()
 
-      var source: Source[EventHubMessage, NotUsed] = hub1.source()
+      var source: Source[EventHubsMessage, NotUsed] = hub1.source()
       source = hub1.source(partitions)
       source = hub1.source(partitions = partitions)
       source = hub1.source(Instant.now())

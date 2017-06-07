@@ -4,7 +4,7 @@ package com.microsoft.azure.reactiveeventhubs.checkpointing
 
 import akka.stream.stage.{GraphStage, GraphStageLogic, InHandler, OutHandler}
 import akka.stream.{Attributes, FlowShape, Inlet, Outlet}
-import com.microsoft.azure.reactiveeventhubs.EventHubMessage
+import com.microsoft.azure.reactiveeventhubs.EventHubsMessage
 import com.microsoft.azure.reactiveeventhubs.checkpointing.CheckpointService.UpdateOffset
 
 /** Flow receiving and emitting Event hub messages, while keeping note of the last offset seen
@@ -12,10 +12,10 @@ import com.microsoft.azure.reactiveeventhubs.checkpointing.CheckpointService.Upd
   * @param partition Event hub partition number
   */
 private[reactiveeventhubs] class SaveOffsetOnPull(cpconfig: ICPConfiguration, partition: Int)
-  extends GraphStage[FlowShape[EventHubMessage, EventHubMessage]] {
+  extends GraphStage[FlowShape[EventHubsMessage, EventHubsMessage]] {
 
-  val in   = Inlet[EventHubMessage]("Checkpoint.Flow.in")
-  val out  = Outlet[EventHubMessage]("Checkpoint.Flow.out")
+  val in   = Inlet[EventHubsMessage]("Checkpoint.Flow.in")
+  val out  = Outlet[EventHubsMessage]("Checkpoint.Flow.out")
   val none = ""
 
   override val shape = FlowShape.of(in, out)
@@ -32,7 +32,7 @@ private[reactiveeventhubs] class SaveOffsetOnPull(cpconfig: ICPConfiguration, pa
       // when a message enters the stage we safe its offset
       setHandler(in, new InHandler {
         override def onPush(): Unit = {
-          val message: EventHubMessage = grab(in)
+          val message: EventHubsMessage = grab(in)
           lastOffsetSent = message.offset
           push(out, message)
         }

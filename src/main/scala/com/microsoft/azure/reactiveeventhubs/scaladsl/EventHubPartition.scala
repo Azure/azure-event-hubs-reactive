@@ -13,7 +13,6 @@ import com.microsoft.azure.reactiveeventhubs._
 import com.microsoft.azure.reactiveeventhubs.checkpointing.CheckpointService.GetOffset
 import com.microsoft.azure.reactiveeventhubs.checkpointing.{CheckpointActorSystem, SaveOffsetOnPull}
 import com.microsoft.azure.reactiveeventhubs.config.IConfiguration
-import com.microsoft.azure.reactiveeventhubs.filters.Ignore
 
 import scala.concurrent.Await
 import scala.concurrent.duration._
@@ -41,7 +40,7 @@ private[reactiveeventhubs] case class EventHubPartition(config: IConfiguration, 
     *
     * @return A source of Event hub messages
     */
-  def source(options: SourceOptions): Source[EventHubMessage, NotUsed] = {
+  def source(options: SourceOptions): Source[EventHubsMessage, NotUsed] = {
 
     // Load the partition offset saved in the checkpoint storage
     val savedOffset = if (!options.isFromSavedOffsets)
@@ -83,9 +82,9 @@ private[reactiveeventhubs] case class EventHubPartition(config: IConfiguration, 
 
     // Build the source starting by time or by offset
     val source = if (withTimeOffset)
-                   EventHubMessageSource(config, partition, startTime).filter(Ignore.keepAlive)
+                   EventHubsMessageStream(config, partition, startTime)
                  else
-      EventHubMessageSource(config, partition, startOffsets.get).filter(Ignore.keepAlive)
+                    EventHubsMessageStream(config, partition, startOffsets.get)
 
     // Inject a flow to store the stream position after each pull
     if (options.isSaveOffsets) {

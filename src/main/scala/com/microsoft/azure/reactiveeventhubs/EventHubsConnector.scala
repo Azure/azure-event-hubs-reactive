@@ -6,7 +6,7 @@ import com.microsoft.azure.eventhubs.EventHubClient
 import com.microsoft.azure.reactiveeventhubs.config.IConnectConfiguration
 import com.microsoft.azure.servicebus.ConnectionStringBuilder
 
-private case class EventHubStorage(config: IConnectConfiguration) extends Logger {
+private case class EventHubsConnector(config: IConnectConfiguration) extends Logger {
 
   // TODO: Manage transient errors e.g. timeouts
   // EventHubClient.createFromConnectionString(connString)

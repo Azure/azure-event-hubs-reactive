@@ -7,7 +7,7 @@ import java.time.Instant
 import akka.actor.Props
 import akka.pattern.ask
 import akka.stream.scaladsl.Sink
-import com.microsoft.azure.reactiveeventhubs.EventHubMessage
+import com.microsoft.azure.reactiveeventhubs.EventHubsMessage
 import com.microsoft.azure.reactiveeventhubs.ResumeOnError._
 import com.microsoft.azure.reactiveeventhubs.scaladsl.EventHub
 import com.microsoft.azure.reactiveeventhubs.SourceOptions
@@ -80,7 +80,7 @@ class MessagesAreDeliveredInOrder extends FeatureSpec with GivenWhenThen {
         Then("Then the client receives all the messages ordered within each device")
         counter ! "reset"
         val cursors = new mutable.ParHashMap[String, Long]
-        val verifier = Sink.foreach[EventHubMessage] {
+        val verifier = Sink.foreach[EventHubsMessage] {
           m ⇒ {
             counter ! "inc"
             log.debug("seq: {} ", m.sequenceNumber)
