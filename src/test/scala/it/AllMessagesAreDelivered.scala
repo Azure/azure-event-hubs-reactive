@@ -18,7 +18,7 @@ import scala.concurrent.Await
 import scala.concurrent.duration._
 import scala.language.postfixOps
 
-class AllIoTDeviceMessagesAreDelivered extends FeatureSpec with GivenWhenThen {
+class AllMessagesAreDelivered extends FeatureSpec with GivenWhenThen {
 
   // TODO: we should use tags
   if (!sys.env.contains("TRAVIS_PULL_REQUEST") || sys.env("TRAVIS_PULL_REQUEST") == "false") {
@@ -63,8 +63,6 @@ class AllIoTDeviceMessagesAreDelivered extends FeatureSpec with GivenWhenThen {
         for (msgNumber ← 1 to MessagesPerDevice) {
           for (deviceNumber ← 0 until DevicesCount) {
             devices(deviceNumber).sendMessage(testRunId, msgNumber)
-            // Workaround for https://github.com/Azure/azure-iot-sdk-java/issues/19 (DeviceClient creates a "cert.crt" file)
-            //if (msgNumber == 1) devices(deviceNumber).waitConfirmation()
           }
           for (deviceNumber ← 0 until DevicesCount) devices(deviceNumber).waitConfirmation()
         }

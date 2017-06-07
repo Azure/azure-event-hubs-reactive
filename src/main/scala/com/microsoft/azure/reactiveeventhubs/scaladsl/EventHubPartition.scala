@@ -39,7 +39,7 @@ private[reactiveeventhubs] case class EventHubPartition(config: IConfiguration, 
   /** Create a stream returning all the messages for the defined partition, from the given start
     * point, optionally with checkpointing
     *
-    * @return A source of IoT messages
+    * @return A source of Event hub messages
     */
   def source(options: SourceOptions): Source[EventHubMessage, NotUsed] = {
 

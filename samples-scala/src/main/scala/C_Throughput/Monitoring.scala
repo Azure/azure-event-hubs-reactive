@@ -18,7 +18,7 @@ import scala.language.postfixOps
 object Monitoring {
 
   // Auxiliary vars
-  private[this] val iotHubPartitions    = ConfigFactory.load().getInt("eventhub-react.connection.hubPartitions")
+  private[this] val eventHubPartitions    = ConfigFactory.load().getInt("eventhub-react.connection.hubPartitions")
   private[this] var previousTime : Long = 0
   private[this] var previousTotal: Long = 0
 
@@ -26,10 +26,10 @@ object Monitoring {
   var total: Long = 0
 
   // Total per partition
-  var totals = new ParArray[Long](iotHubPartitions)
+  var totals = new ParArray[Long](eventHubPartitions)
 
   // Remaining messages per partition
-  var remain = new ParArray[Long](iotHubPartitions)
+  var remain = new ParArray[Long](eventHubPartitions)
 
   /* Schedule the stats to be printed with some frequency */
   def printStatisticsWithFrequency(frequency: FiniteDuration): Unit = {
@@ -47,15 +47,15 @@ object Monitoring {
     if (total > 0 && previousTime > 0) {
 
       print(s"Partitions count: ")
-      for (i ← 0 until iotHubPartitions - 1) print(pad6(totals(i)) + ",")
-      print(pad6(totals(iotHubPartitions - 1)))
+      for (i ← 0 until eventHubPartitions - 1) print(pad6(totals(i)) + ",")
+      print(pad6(totals(eventHubPartitions - 1)))
 
       val throughput = ((total - previousTotal) * 1000 / (now - previousTime)).toInt
       println(s" - Total: ${pad6(total)} - Speed: $throughput/sec")
 
       print(s"       remaining: ")
-      for (i ← 0 until iotHubPartitions - 1) print(pad6(remain(i)) + ",")
-      println(pad6(remain(iotHubPartitions - 1)))
+      for (i ← 0 until eventHubPartitions - 1) print(pad6(remain(i)) + ",")
+      println(pad6(remain(eventHubPartitions - 1)))
     }
 
     previousTotal = total

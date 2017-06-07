@@ -19,7 +19,7 @@ import scala.concurrent.Await
 import scala.concurrent.duration._
 import scala.language.postfixOps
 
-class DeviceIoTMessagesAreDeliveredInOrder extends FeatureSpec with GivenWhenThen {
+class MessagesAreDeliveredInOrder extends FeatureSpec with GivenWhenThen {
 
   // TODO: we should use tags
   if (!sys.env.contains("TRAVIS_PULL_REQUEST") || sys.env("TRAVIS_PULL_REQUEST") == "false") {

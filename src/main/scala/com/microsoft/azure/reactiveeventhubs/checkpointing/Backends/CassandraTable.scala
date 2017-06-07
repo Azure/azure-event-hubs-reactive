@@ -22,7 +22,7 @@ private[reactiveeventhubs] class CassandraTable(cpconfig: ICPConfiguration) exte
 
   /** Read the offset of the last record processed for the given partition
     *
-    * @param partition IoT hub partition number
+    * @param partition Event hub partition number
     *
     * @return Offset of the last record (already) processed
     */
@@ -36,10 +36,10 @@ private[reactiveeventhubs] class CassandraTable(cpconfig: ICPConfiguration) exte
     }
   }
 
-  /** Store the offset for the given IoT hub partition
+  /** Store the offset for the given Event hub partition
     *
-    * @param partition IoT hub partition number
-    * @param offset    IoT hub partition offset
+    * @param partition Event hub partition number
+    * @param offset    Event hub partition offset
     */
   override def writeOffset(partition: Int, offset: String): Unit = {
     table.updateRow(CheckpointRecord(partition, offset))

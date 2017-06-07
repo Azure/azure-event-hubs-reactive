@@ -76,10 +76,10 @@ private[reactiveeventhubs] class AzureBlob(cpconfig: ICPConfiguration) extends C
     }
   }
 
-  /** Store the offset for the given IoT hub partition
+  /** Store the offset for the given Event hub partition
     *
-    * @param partition IoT hub partition number
-    * @param offset    IoT hub partition offset
+    * @param partition Event hub partition number
+    * @param offset    Event hub partition offset
     */
   override def writeOffset(partition: Int, offset: String): Unit = {
     val file = getBlockBlobReference(partition)

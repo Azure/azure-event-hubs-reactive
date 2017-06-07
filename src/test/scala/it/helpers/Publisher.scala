@@ -10,28 +10,9 @@ class Publisher (publisherId: String) extends Logger {
   private val waitOnSend = 20000
   private val waitUnit   = 50
 
-//  private[this] class EventCallback extends IotHubEventCallback {
-//    override def execute(status: IotHubStatusCode, context: scala.Any): Unit = {
-//      ready = true
-//      val i = context.asInstanceOf[Int]
-//      log.debug("{}: Message {} status {}", deviceId, i, status.name())
-//
-//      // Sleep to avoid being throttled
-//      Thread.sleep(50)
-//    }
-//  }
-
-  // Load device credentials
-  private[this] lazy val credentials = Configuration.deviceCredentials(publisherId)
-
-  // Prepare connection string for this device
-  private[this] lazy val connString = DeviceConnectionString.build(
-    Configuration.iotHubName, credentials.deviceId, credentials.primaryKey)
-
   // Prepare client to send messages
   private[this] lazy val client = {
     log.info("Opening connection for device '{}'", publisherId)
-    //new DeviceClient(connString, IotHubClientProtocol.AMQPS)
   }
 
   def sendMessage(text: String, sequenceNumber: Int): Unit = {

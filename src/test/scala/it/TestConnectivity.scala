@@ -51,8 +51,8 @@ class TestConnectivity extends FeatureSpec with GivenWhenThen {
         }
 
         val connString = new ConnectionStringBuilder(
-          Configuration.iotHubNamespace,
-          Configuration.iotHubName,
+          Configuration.eventHubNamespace,
+          Configuration.eventHubName,
           Configuration.accessPolicy,
           Configuration.accessKey).toString
 
@@ -64,7 +64,7 @@ class TestConnectivity extends FeatureSpec with GivenWhenThen {
         var p = 0
 
         // Check that at least one message arrived to Event Hub
-        while (!found && p < Configuration.iotHubPartitions) {
+        while (!found && p < Configuration.eventHubPartitions) {
 
           log.info("Checking partition {}", p)
           val receiver: PartitionReceiver = client.createReceiverSync(Configuration.receiverConsumerGroup, p.toString, startTime)

@@ -195,7 +195,7 @@ object MultipleDestinations extends App {
     .run()
 }
 
-/** Show how to close the stream, terminating the connections to Azure IoT hub
+/** Show how to close the stream, terminating the connections to Azure Event hub
   */
 object CloseStream extends App {
 

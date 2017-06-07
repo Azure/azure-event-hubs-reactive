@@ -17,18 +17,18 @@ class EventHub(config: IConfiguration) {
   // Parameterless ctor
   def this() = this(Configuration())
 
-  private lazy val iotHub = EventHubDsl(config)
+  private lazy val eventHub = EventHubDsl(config)
 
   /** Stop the stream
     */
-  def close(): Unit = iotHub.close()
+  def close(): Unit = eventHub.close()
 
   /** Stream returning all the messages since the beginning, from all the
     * configured partitions.
     *
     * @return A source of Event hub messages
     */
-  def source(): JavaSource[EventHubMessage, NotUsed] = new JavaSource(iotHub.source())
+  def source(): JavaSource[EventHubMessage, NotUsed] = new JavaSource(eventHub.source())
 
   /** Stream returning all the messages from all the requested partitions.
     * If checkpointing the stream starts from the last position saved, otherwise
@@ -39,7 +39,7 @@ class EventHub(config: IConfiguration) {
     * @return A source of Event hub messages
     */
   def source(partitions: java.util.List[java.lang.Integer]): JavaSource[EventHubMessage, NotUsed] = {
-    new JavaSource(iotHub.source(SourceOptions().partitions(partitions)))
+    new JavaSource(eventHub.source(SourceOptions().partitions(partitions)))
   }
 
   /** Stream returning all the messages starting from the given time, from all
@@ -50,7 +50,7 @@ class EventHub(config: IConfiguration) {
     * @return A source of Event hub messages
     */
   def source(startTime: Instant): JavaSource[EventHubMessage, NotUsed] = {
-    new JavaSource(iotHub.source(startTime))
+    new JavaSource(eventHub.source(startTime))
   }
 
   /** Stream events using the requested options
@@ -60,6 +60,6 @@ class EventHub(config: IConfiguration) {
     * @return A source of Event hub messages
     */
   def source(options: SourceOptions): JavaSource[EventHubMessage, NotUsed] = {
-    new JavaSource(iotHub.source(options))
+    new JavaSource(eventHub.source(options))
   }
 }

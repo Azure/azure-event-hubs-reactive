@@ -10,20 +10,20 @@ import com.microsoft.azure.reactiveeventhubs.EventHubMessage
 import com.microsoft.azure.reactiveeventhubs.scaladsl.EventHub
 import org.scalatest._
 
-class IoTHubReactHasAnAwesomeAPI extends FeatureSpec with GivenWhenThen {
+class EventHubReactSimpleAPI extends FeatureSpec with GivenWhenThen {
 
-  info("As a client of Azure IoT hub")
-  info("I want to be able to receive device messages as a stream")
+  info("As a client of Azure Event hub")
+  info("I want to be able to receive messages as a stream")
   info("So I can process them asynchronously and at scale")
 
-  Feature("IoT Hub React has an awesome API") {
+  Feature("Event Hub React API") {
 
-    Scenario("Developer wants to retrieve IoT messages") {
+    Scenario("Developer wants to retrieve Event hub messages") {
 
-      Given("An IoT hub is configured")
+      Given("An Event hub is configured")
       val hub = EventHub()
 
-      When("A developer wants to fetch messages from Azure IoT hub")
+      When("A developer wants to fetch messages from Azure Event hub")
       val messagesFromAllPartitions: Source[EventHubMessage, NotUsed] = hub.source()
       val messagesFromNowOn: Source[EventHubMessage, NotUsed] = hub.source(Instant.now())
 
