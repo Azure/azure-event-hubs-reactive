@@ -6,7 +6,7 @@ import akka.actor.ActorSystem
 import akka.event.{LogSource, Logging}
 
 private[reactiveeventhubs] object Logger {
-  val actorSystem = ActorSystem("IoTHubReact")
+  val actorSystem = ActorSystem("EventHubReact")
 }
 
 /** Common logger via Akka

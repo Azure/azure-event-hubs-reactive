@@ -26,7 +26,7 @@ object Configuration {
   def apply(configData: Config): IConfiguration = new Configuration(configData)
 }
 
-/** Hold IoT Hub React configuration settings
+/** Hold Event Hub React configuration settings
   *
   * @see https://github.com/typesafehub/config for information about the configuration file formats
   */

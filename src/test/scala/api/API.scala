@@ -12,7 +12,7 @@ class APIIsBackwardCompatible
   extends org.scalatest.FeatureSpec
     with org.scalatest.mockito.MockitoSugar {
 
-  info("As a developer using Azure IoT hub React")
+  info("As a developer using Azure Event hub React")
   info("I want to be able to upgrade to new minor versions without changing my code")
   info("So I can benefit from improvements without excessive development costs")
 
@@ -20,33 +20,26 @@ class APIIsBackwardCompatible
 
     Scenario("Using MessageFromDevice") {
       import com.microsoft.azure.eventhubs.{EventData, ReceiverRuntimeInformation}
-      import com.microsoft.azure.reactiveeventhubs.MessageFromDevice
+      import com.microsoft.azure.reactiveeventhubs.EventHubMessage
 
       val data: Option[EventData] = None
       val partition: Option[Int] = Some(1)
 
       // Test properties
       val partitionInfo = Some(new ReceiverRuntimeInformation(partition.toString))
-      val message1 = new MessageFromDevice(data, partition, partitionInfo)
+      val message1 = new EventHubMessage(data, partition, partitionInfo)
       lazy val properties: java.util.Map[String, String] = message1.properties
-      lazy val isKeepAlive: Boolean = message1.isKeepAlive
-      lazy val messageSchema: String = message1.messageSchema
-      lazy val contentType: String = message1.contentType
       lazy val created: java.time.Instant = message1.received
       lazy val offset: String = message1.offset
       lazy val sequenceNumber: Long = message1.sequenceNumber
-      lazy val deviceId: String = message1.deviceId
-      lazy val messageId: String = message1.messageId
       lazy val content: Array[Byte] = message1.content
       lazy val contentAsString: String = message1.contentAsString
-      assert(message1.isKeepAlive == false)
 
       // Named parameters
-      val message2: MessageFromDevice = new MessageFromDevice(data = data, partNumber = partition, partInfo = partitionInfo)
+      val message2: EventHubMessage = new EventHubMessage(data = data, partNumber = partition, partInfo = partitionInfo)
 
       // Keepalive
-      val message3: MessageFromDevice = new MessageFromDevice(data, partNumber = None, partInfo = None)
-      assert(message3.isKeepAlive == true)
+      val message3: EventHubMessage = new EventHubMessage(data, partNumber = None, partInfo = None)
     }
 
     Scenario("Using ResumeOnError") {
@@ -88,20 +81,12 @@ class APIIsBackwardCompatible
       assert(backend.checkpointNamespace(cpconfig) == anyname)
     }
 
-    Scenario("Using Message Type") {
-      import com.microsoft.azure.reactiveeventhubs.MessageFromDevice
-      import com.microsoft.azure.reactiveeventhubs.filters.MessageSchema
-
-      val filter1: (MessageFromDevice) ⇒ Boolean = MessageSchema("some")
-      val filter2: MessageSchema = new MessageSchema("some")
-    }
-
     Scenario("Using Scala DSL EventHub") {
       import java.time.Instant
 
       import akka.NotUsed
       import akka.stream.scaladsl.Source
-      import com.microsoft.azure.reactiveeventhubs.MessageFromDevice
+      import com.microsoft.azure.reactiveeventhubs.EventHubMessage
       import com.microsoft.azure.reactiveeventhubs.config.IConfiguration
       import com.microsoft.azure.reactiveeventhubs.scaladsl.EventHub
 
@@ -111,7 +96,7 @@ class APIIsBackwardCompatible
       val partitions = Seq(0, 1, 3)
       val options = SourceOptions()
 
-      var source: Source[MessageFromDevice, NotUsed] = hub1.source()
+      var source: Source[EventHubMessage, NotUsed] = hub1.source()
       source = hub1.source(partitions)
       source = hub1.source(partitions = partitions)
       source = hub1.source(Instant.now())
@@ -128,7 +113,7 @@ class APIIsBackwardCompatible
 
       import akka.NotUsed
       import akka.stream.javadsl.Source
-      import com.microsoft.azure.reactiveeventhubs.MessageFromDevice
+      import com.microsoft.azure.reactiveeventhubs.EventHubMessage
       import com.microsoft.azure.reactiveeventhubs.config.IConfiguration
       import com.microsoft.azure.reactiveeventhubs.javadsl.EventHub
 
@@ -138,7 +123,7 @@ class APIIsBackwardCompatible
       val partitions: java.util.List[java.lang.Integer] = java.util.Arrays.asList(0, 1, 3)
       val options = new SourceOptions()
 
-      var source: Source[MessageFromDevice, NotUsed] = hub1.source()
+      var source: Source[EventHubMessage, NotUsed] = hub1.source()
       source = hub1.source(partitions)
       source = hub1.source(partitions = partitions)
       source = hub1.source(Instant.now())

@@ -12,17 +12,17 @@ import scala.language.postfixOps
 
 trait IStreamConfiguration {
 
-  // Hub receiver group name. See: "IoT Hub" >> your hub > "Messaging" >> Consumer groups
+  // Event Hub Consumer group name
   // @see https://azure.microsoft.com/en-us/documentation/articles/event-hubs-overview
   val receiverConsumerGroup: String
 
-  // Hub message receiver timeout.
+  // Event Hub message receiver timeout.
   val receiverTimeout: FiniteDuration
 
   // How many messages to retrieve on each pull, max is 999.
   val receiverBatchSize: Int
 
-  // Whether to retrieve information about the partitions while streming events from IoT Hub.
+  // Whether to retrieve information about the partitions while streaming events from Event Hub.
   val retrieveRuntimeInfo: Boolean
 }
 
@@ -33,16 +33,16 @@ object StreamConfiguration {
   def apply(configData: Config): IStreamConfiguration = new StreamConfiguration(configData)
 }
 
-/** Hold IoT Hub React streaming settings
+/** Hold Event Hub React streaming settings
   */
 class StreamConfiguration(configData: Config) extends IStreamConfiguration {
 
   // Parameterless ctor
   def this() = this(ConfigFactory.load)
 
-  private[this] val confStreamingPath = "iothub-react.streaming."
+  private[this] val confStreamingPath = "eventhub-react.streaming."
 
-  // Default IoThub client timeout
+  // Default EventHub client timeout
   private[this] val DefaultReceiverTimeout = 3 seconds
 
   // Maximum size supported by the client

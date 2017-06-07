@@ -7,7 +7,7 @@ import java.time.Instant
 import com.microsoft.azure.eventhubs.{EventHubClient, PartitionReceiver}
 import com.microsoft.azure.reactiveeventhubs.ResumeOnError._
 import com.microsoft.azure.servicebus.ConnectionStringBuilder
-import it.helpers.{Configuration, Device}
+import it.helpers.{Configuration, Publisher}
 import org.scalatest._
 
 import scala.collection.JavaConverters._
@@ -26,7 +26,7 @@ class TestConnectivity extends FeatureSpec with GivenWhenThen {
     val testRunId = s"[${this.getClass.getName}-" + java.util.UUID.randomUUID().toString + "]"
     val startTime = Instant.now().minusSeconds(60)
 
-    Feature("The test suite can connect to IoT Hub") {
+    Feature("The test suite can connect to Event Hub") {
 
       Scenario("The test uses the configured credentials") {
 
@@ -34,8 +34,8 @@ class TestConnectivity extends FeatureSpec with GivenWhenThen {
         val DevicesCount = 10
 
         // Create devices
-        val devices = new collection.mutable.ListMap[Int, Device]()
-        for (deviceNumber ← 0 until DevicesCount) devices(deviceNumber) = new Device("device" + (10000 + deviceNumber))
+        val devices = new collection.mutable.ListMap[Int, Publisher]()
+        for (deviceNumber ← 0 until DevicesCount) devices(deviceNumber) = new Publisher("device" + (10000 + deviceNumber))
 
         // Send a message from each device
         for (deviceNumber ← 0 until DevicesCount) {
@@ -56,14 +56,14 @@ class TestConnectivity extends FeatureSpec with GivenWhenThen {
           Configuration.accessPolicy,
           Configuration.accessKey).toString
 
-        log.info("Connecting to IoT Hub")
+        log.info("Connecting to Event Hub")
         val client = EventHubClient.createFromConnectionStringSync(connString)
 
         var found = false
         var attempts = 0
         var p = 0
 
-        // Check that at least one message arrived to IoT Hub
+        // Check that at least one message arrived to Event Hub
         while (!found && p < Configuration.iotHubPartitions) {
 
           log.info("Checking partition {}", p)

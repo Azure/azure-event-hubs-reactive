@@ -13,7 +13,7 @@ class CPConfigurationTest extends FeatureSpec with GivenWhenThen with MockitoSug
   info("As a configured instance")
   info("I want logic around returned values to be consistent with application expectations")
 
-  val confPath = "iothub-react.checkpointing."
+  val confPath = "eventhub-react.checkpointing."
   Feature("Configuration Cassandra authorization") {
 
     Scenario("Only one of username or password is supplied") {
@@ -43,13 +43,13 @@ class CPConfigurationTest extends FeatureSpec with GivenWhenThen with MockitoSug
       when(cfg.getString(confPath + "storage.namespace")).thenReturn("")
 
       when(cfg.getString(confPath + "storage.backendType")).thenReturn("anythingbutcassandra")
-      assert(new CPConfiguration(cfg).storageNamespace == "iothub-react-checkpoints")
+      assert(new CPConfiguration(cfg).storageNamespace == "eventhub-react-checkpoints")
 
       when(cfg.getString(confPath + "storage.backendType")).thenReturn("AZUREBLOB")
-      assert(new CPConfiguration(cfg).storageNamespace == "iothub-react-checkpoints")
+      assert(new CPConfiguration(cfg).storageNamespace == "eventhub-react-checkpoints")
 
       when(cfg.getString(confPath + "storage.backendType")).thenReturn("CASSANDRA")
-      assert(new CPConfiguration(cfg).storageNamespace == "iothub_react_checkpoints")
+      assert(new CPConfiguration(cfg).storageNamespace == "eventhub_react_checkpoints")
     }
   }
 }

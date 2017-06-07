@@ -31,7 +31,7 @@ trait ICPConfiguration {
     */
   val checkpointRWTimeout: FiniteDuration
 
-  /** How many messages to replay after a restart, for each IoT hub partition
+  /** How many messages to replay after a restart, for each Event hub partition
     */
   val checkpointCountThreshold: Int
 
@@ -72,7 +72,7 @@ object CPConfiguration {
   def apply(configData: Config): ICPConfiguration = new CPConfiguration(configData)
 }
 
-/** Hold IoT Hub stream checkpointing configuration settings
+/** Hold Event Hub stream checkpointing configuration settings
   */
 class CPConfiguration(configData: Config) extends ICPConfiguration {
 
@@ -82,7 +82,7 @@ class CPConfiguration(configData: Config) extends ICPConfiguration {
   // TODO: Allow to use multiple configurations, e.g. while processing multiple streams
   //       a client will need a dedicated checkpoint container for each stream
 
-  private[this] val confPath = "iothub-react.checkpointing."
+  private[this] val confPath = "eventhub-react.checkpointing."
 
   // Default time between checkpoint writes to the storage
   private[this] val DefaultFrequency = 1 second
@@ -122,8 +122,8 @@ class CPConfiguration(configData: Config) extends ICPConfiguration {
 
   // Default name of the container used to store checkpoint data
   private[this] lazy val DefaultContainer = checkpointBackendType.toUpperCase match {
-    case "CASSANDRA" ⇒ "iothub_react_checkpoints"
-    case _           ⇒ "iothub-react-checkpoints"
+    case "CASSANDRA" ⇒ "eventhub_react_checkpoints"
+    case _           ⇒ "eventhub-react-checkpoints"
   }
 
   // How often checkpoint data is written to the storage
@@ -133,7 +133,7 @@ class CPConfiguration(configData: Config) extends ICPConfiguration {
     MinFrequency,
     MaxFrequency)
 
-  // How many messages to replay after a restart, for each IoT hub partition
+  // How many messages to replay after a restart, for each Event hub partition
   lazy val checkpointCountThreshold: Int = Math.max(1, configData.getInt(confPath + "countThreshold"))
 
   // Store a position if its value is older than this amount of time, rounded to seconds

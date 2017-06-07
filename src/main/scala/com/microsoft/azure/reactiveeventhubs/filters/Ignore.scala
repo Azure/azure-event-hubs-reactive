@@ -2,9 +2,9 @@
 
 package com.microsoft.azure.reactiveeventhubs.filters
 
-import com.microsoft.azure.reactiveeventhubs.MessageFromDevice
+import com.microsoft.azure.reactiveeventhubs.EventHubMessage
 
-/** Set of filters to ignore IoT traffic
+/** Set of filters to ignore Event hub traffic
   *
   */
 private[reactiveeventhubs] object Ignore {
@@ -13,5 +13,5 @@ private[reactiveeventhubs] object Ignore {
     *
     * @return True if the message must be processed
     */
-  def keepAlive = (m: MessageFromDevice) ⇒ !m.isKeepAlive
+  def keepAlive = (m: EventHubMessage) ⇒ m.contentAsString == "ignore"
 }

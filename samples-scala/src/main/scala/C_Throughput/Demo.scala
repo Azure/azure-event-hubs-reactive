@@ -3,7 +3,7 @@
 package C_Throughput
 
 import akka.stream.scaladsl.Sink
-import com.microsoft.azure.reactiveeventhubs.MessageFromDevice
+import com.microsoft.azure.reactiveeventhubs.EventHubMessage
 import com.microsoft.azure.reactiveeventhubs.ResumeOnError._
 import com.microsoft.azure.reactiveeventhubs.scaladsl._
 
@@ -17,7 +17,7 @@ object Demo extends App {
   val showStatsEvery = 1 second
 
   // Messages throughput monitoring sink
-  val monitor = Sink.foreach[MessageFromDevice] {
+  val monitor = Sink.foreach[EventHubMessage] {
     m ⇒ {
       Monitoring.total += 1
 

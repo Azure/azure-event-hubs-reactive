@@ -513,7 +513,7 @@
 </p><div class="fullcomment"><div class="comment cmt"><p>Sink to communicate with IoT devices
 </p></div><dl class="paramcmts block"><dt class="tparam">A</dt><dd class="cmt"><p>Type of communication (message, method, property)</p></dd><dt class="param">typedSink</dt><dd class="cmt"><p>Sink factory</p></dd><dt>returns</dt><dd class="cmt"><p>Streaming sink</p></dd></dl></div>
     </li><li name="com.microsoft.azure.reactiveeventhubs.scaladsl.IoTHub#source" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="source(options:com.microsoft.azure.reactiveeventhubs.SourceOptions):akka.stream.scaladsl.Source[com.microsoft.azure.reactiveeventhubs.MessageFromDevice,akka.NotUsed]"></a>
+      <a id="source(options:com.microsoft.azure.reactiveeventhubs.SourceOptions):akka.stream.scaladsl.Source[com.microsoft.azure.reactiveeventhubs.EventHubMessage,akka.NotUsed]"></a>
       <a id="source(SourceOptions):Source[MessageFromDevice,NotUsed]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -521,7 +521,7 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">source</span><span class="params">(<span name="options">options: <a href="../SourceOptions.html" class="extype" name="com.microsoft.azure.reactiveeventhubs.SourceOptions">SourceOptions</a></span>)</span><span class="result">: <span class="extype" name="akka.stream.scaladsl.Source">Source</span>[<a href="../MessageFromDevice.html" class="extype" name="com.microsoft.azure.reactiveeventhubs.MessageFromDevice">MessageFromDevice</a>, <span class="extype" name="akka.NotUsed">NotUsed</span>]</span>
+        <span class="name">source</span><span class="params">(<span name="options">options: <a href="../SourceOptions.html" class="extype" name="com.microsoft.azure.reactiveeventhubs.SourceOptions">SourceOptions</a></span>)</span><span class="result">: <span class="extype" name="akka.stream.scaladsl.Source">Source</span>[<a href="../MessageFromDevice.html" class="extype" name="com.microsoft.azure.reactiveeventhubs.EventHubMessage">MessageFromDevice</a>, <span class="extype" name="akka.NotUsed">NotUsed</span>]</span>
       </span>
       </h4><span class="permalink">
       <a href="../../../../../../index.html#com.microsoft.azure.reactiveeventhubs.scaladsl.EventHub@source(options:com.microsoft.azure.reactiveeventhubs.SourceOptions):akka.stream.scaladsl.Source[com.microsoft.azure.reactiveeventhubs.MessageFromDevice,akka.NotUsed]" title="Permalink" target="_top">
@@ -534,7 +534,7 @@ checkpointing
 checkpointing
 </p></div><dl class="paramcmts block"><dt>returns</dt><dd class="cmt"><p>A source of IoT messages</p></dd></dl></div>
     </li><li name="com.microsoft.azure.reactiveeventhubs.scaladsl.IoTHub#source" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="source(startTime:java.time.Instant):akka.stream.scaladsl.Source[com.microsoft.azure.reactiveeventhubs.MessageFromDevice,akka.NotUsed]"></a>
+      <a id="source(startTime:java.time.Instant):akka.stream.scaladsl.Source[com.microsoft.azure.reactiveeventhubs.EventHubMessage,akka.NotUsed]"></a>
       <a id="source(Instant):Source[MessageFromDevice,NotUsed]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -542,7 +542,7 @@ checkpointing
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">source</span><span class="params">(<span name="startTime">startTime: <span class="extype" name="java.time.Instant">Instant</span></span>)</span><span class="result">: <span class="extype" name="akka.stream.scaladsl.Source">Source</span>[<a href="../MessageFromDevice.html" class="extype" name="com.microsoft.azure.reactiveeventhubs.MessageFromDevice">MessageFromDevice</a>, <span class="extype" name="akka.NotUsed">NotUsed</span>]</span>
+        <span class="name">source</span><span class="params">(<span name="startTime">startTime: <span class="extype" name="java.time.Instant">Instant</span></span>)</span><span class="result">: <span class="extype" name="akka.stream.scaladsl.Source">Source</span>[<a href="../MessageFromDevice.html" class="extype" name="com.microsoft.azure.reactiveeventhubs.EventHubMessage">MessageFromDevice</a>, <span class="extype" name="akka.NotUsed">NotUsed</span>]</span>
       </span>
       </h4><span class="permalink">
       <a href="../../../../../../index.html#com.microsoft.azure.reactiveeventhubs.scaladsl.EventHub@source(startTime:java.time.Instant):akka.stream.scaladsl.Source[com.microsoft.azure.reactiveeventhubs.MessageFromDevice,akka.NotUsed]" title="Permalink" target="_top">
@@ -554,7 +554,7 @@ the configured partitions.</p><div class="fullcomment"><div class="comment cmt">
 the configured partitions.
 </p></div><dl class="paramcmts block"><dt class="param">startTime</dt><dd class="cmt"><p>Starting position expressed in time</p></dd><dt>returns</dt><dd class="cmt"><p>A source of IoT messages</p></dd></dl></div>
     </li><li name="com.microsoft.azure.reactiveeventhubs.scaladsl.IoTHub#source" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="source(partitions:Seq[Int]):akka.stream.scaladsl.Source[com.microsoft.azure.reactiveeventhubs.MessageFromDevice,akka.NotUsed]"></a>
+      <a id="source(partitions:Seq[Int]):akka.stream.scaladsl.Source[com.microsoft.azure.reactiveeventhubs.EventHubMessage,akka.NotUsed]"></a>
       <a id="source(Seq[Int]):Source[MessageFromDevice,NotUsed]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -562,7 +562,7 @@ the configured partitions.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">source</span><span class="params">(<span name="partitions">partitions: <span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="scala.Int">Int</span>]</span>)</span><span class="result">: <span class="extype" name="akka.stream.scaladsl.Source">Source</span>[<a href="../MessageFromDevice.html" class="extype" name="com.microsoft.azure.reactiveeventhubs.MessageFromDevice">MessageFromDevice</a>, <span class="extype" name="akka.NotUsed">NotUsed</span>]</span>
+        <span class="name">source</span><span class="params">(<span name="partitions">partitions: <span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="scala.Int">Int</span>]</span>)</span><span class="result">: <span class="extype" name="akka.stream.scaladsl.Source">Source</span>[<a href="../MessageFromDevice.html" class="extype" name="com.microsoft.azure.reactiveeventhubs.EventHubMessage">MessageFromDevice</a>, <span class="extype" name="akka.NotUsed">NotUsed</span>]</span>
       </span>
       </h4><span class="permalink">
       <a href="../../../../../../index.html#com.microsoft.azure.reactiveeventhubs.scaladsl.EventHub@source(partitions:Seq[Int]):akka.stream.scaladsl.Source[com.microsoft.azure.reactiveeventhubs.MessageFromDevice,akka.NotUsed]" title="Permalink" target="_top">
@@ -574,7 +574,7 @@ If checkpointing the stream starts from the last position saved, otherwise
 it starts from the beginning.
 </p></div><dl class="paramcmts block"><dt class="param">partitions</dt><dd class="cmt"><p>Partitions to process</p></dd><dt>returns</dt><dd class="cmt"><p>A source of IoT messages</p></dd></dl></div>
     </li><li name="com.microsoft.azure.reactiveeventhubs.scaladsl.IoTHub#source" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="source():akka.stream.scaladsl.Source[com.microsoft.azure.reactiveeventhubs.MessageFromDevice,akka.NotUsed]"></a>
+      <a id="source():akka.stream.scaladsl.Source[com.microsoft.azure.reactiveeventhubs.EventHubMessage,akka.NotUsed]"></a>
       <a id="source():Source[MessageFromDevice,NotUsed]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -582,7 +582,7 @@ it starts from the beginning.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">source</span><span class="params">()</span><span class="result">: <span class="extype" name="akka.stream.scaladsl.Source">Source</span>[<a href="../MessageFromDevice.html" class="extype" name="com.microsoft.azure.reactiveeventhubs.MessageFromDevice">MessageFromDevice</a>, <span class="extype" name="akka.NotUsed">NotUsed</span>]</span>
+        <span class="name">source</span><span class="params">()</span><span class="result">: <span class="extype" name="akka.stream.scaladsl.Source">Source</span>[<a href="../MessageFromDevice.html" class="extype" name="com.microsoft.azure.reactiveeventhubs.EventHubMessage">MessageFromDevice</a>, <span class="extype" name="akka.NotUsed">NotUsed</span>]</span>
       </span>
       </h4><span class="permalink">
       <a href="../../../../../../index.html#com.microsoft.azure.reactiveeventhubs.scaladsl.EventHub@source():akka.stream.scaladsl.Source[com.microsoft.azure.reactiveeventhubs.MessageFromDevice,akka.NotUsed]" title="Permalink" target="_top">

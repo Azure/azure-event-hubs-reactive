@@ -6,10 +6,10 @@ import akka.stream.stage.{GraphStage, GraphStageLogic, InHandler, OutHandler}
 import akka.stream.{Attributes, FlowShape, Inlet, Outlet}
 
 private[reactiveeventhubs] class StreamManager
-  extends GraphStage[FlowShape[MessageFromDevice, MessageFromDevice]] {
+  extends GraphStage[FlowShape[EventHubMessage, EventHubMessage]] {
 
-  private[this] val in          = Inlet[MessageFromDevice]("StreamCanceller.Flow.in")
-  private[this] val out         = Outlet[MessageFromDevice]("StreamCanceller.Flow.out")
+  private[this] val in          = Inlet[EventHubMessage]("StreamCanceller.Flow.in")
+  private[this] val out         = Outlet[EventHubMessage]("StreamCanceller.Flow.out")
   private[this] var closeSignal = false
 
   override val shape = FlowShape.of(in, out)
@@ -21,7 +21,7 @@ private[reactiveeventhubs] class StreamManager
 
       setHandler(in, new InHandler {
         override def onPush(): Unit = {
-          val message: MessageFromDevice = grab(in)
+          val message: EventHubMessage = grab(in)
           push(out, message)
         }
       })

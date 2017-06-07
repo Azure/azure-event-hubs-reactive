@@ -7,7 +7,7 @@ object DeviceConnectionString {
 
   /** Format a connection string accordingly to SDK
     *
-    * @param hubName   IoT hub name
+    * @param hubName   Event hub name
     * @param deviceId  Device ID
     * @param accessKey Device authorization key
     *

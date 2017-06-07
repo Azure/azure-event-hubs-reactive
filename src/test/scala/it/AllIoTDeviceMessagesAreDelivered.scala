@@ -7,11 +7,11 @@ import java.time.Instant
 import akka.actor.Props
 import akka.pattern.ask
 import akka.stream.scaladsl.Sink
-import com.microsoft.azure.reactiveeventhubs.MessageFromDevice
+import com.microsoft.azure.reactiveeventhubs.EventHubMessage
 import com.microsoft.azure.reactiveeventhubs.ResumeOnError._
 import com.microsoft.azure.reactiveeventhubs.scaladsl.EventHub
 import com.microsoft.azure.reactiveeventhubs.SourceOptions
-import it.helpers.{Counter, Device}
+import it.helpers.{Counter, Publisher}
 import org.scalatest._
 
 import scala.concurrent.Await
@@ -23,7 +23,7 @@ class AllIoTDeviceMessagesAreDelivered extends FeatureSpec with GivenWhenThen {
   // TODO: we should use tags
   if (!sys.env.contains("TRAVIS_PULL_REQUEST") || sys.env("TRAVIS_PULL_REQUEST") == "false") {
 
-    info("As a client of Azure IoT hub")
+    info("As a client of Azure Event hub")
     info("I want to be able to receive all device messages")
     info("So I can process them all")
 
@@ -37,9 +37,9 @@ class AllIoTDeviceMessagesAreDelivered extends FeatureSpec with GivenWhenThen {
       Await.result(counter.ask("get")(5 seconds), 5 seconds).asInstanceOf[Long]
     }
 
-    Feature("All IoT device messages are delivered") {
+    Feature("All Event hub messages are delivered") {
 
-      Scenario("Application wants to retrieve all IoT messages") {
+      Scenario("Application wants to retrieve all Event hub messages") {
 
         // How many seconds we allow the test to wait for messages from the stream
         val TestTimeout = 60 seconds
@@ -48,14 +48,14 @@ class AllIoTDeviceMessagesAreDelivered extends FeatureSpec with GivenWhenThen {
         val expectedMessageCount = DevicesCount * MessagesPerDevice
 
         // Create devices
-        val devices = new collection.mutable.ListMap[Int, Device]()
-        for (deviceNumber ← 0 until DevicesCount) devices(deviceNumber) = new Device("device" + (10000 + deviceNumber))
+        val devices = new collection.mutable.ListMap[Int, Publisher]()
+        for (deviceNumber ← 0 until DevicesCount) devices(deviceNumber) = new Publisher("device" + (10000 + deviceNumber))
 
         // We'll use this as the streaming start date
         val startTime = Instant.now().minusSeconds(30)
         log.info("Test run: {}, Start time: {}", testRunId, startTime)
 
-        Given("An IoT hub is configured")
+        Given("An Event hub is configured")
         val hub = EventHub()
         val messages = hub.source(SourceOptions().fromTime(startTime))
 
@@ -75,7 +75,7 @@ class AllIoTDeviceMessagesAreDelivered extends FeatureSpec with GivenWhenThen {
 
         When("A client application processes messages from the stream")
         counter ! "reset"
-        val count = Sink.foreach[MessageFromDevice] {
+        val count = Sink.foreach[EventHubMessage] {
           m ⇒ counter ! "inc"
         }
 

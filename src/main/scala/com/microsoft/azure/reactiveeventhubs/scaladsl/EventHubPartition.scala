@@ -29,9 +29,9 @@ object EventHubPartition extends Logger {
   final val OffsetCheckpointNotFound: String = "{offset checkpoint not found}"
 }
 
-/** Provide a streaming source to retrieve messages from one Azure IoT Hub partition
+/** Provide a streaming source to retrieve messages from one Azure Event Hub partition
   *
-  * @param partition IoT hub partition number (0-based). The number of
+  * @param partition Event Hub partition number (0-based). The number of
   *                  partitions is set during the deployment.
   */
 private[reactiveeventhubs] case class EventHubPartition(config: IConfiguration, val partition: Int) extends Logger {
@@ -41,7 +41,7 @@ private[reactiveeventhubs] case class EventHubPartition(config: IConfiguration, 
     *
     * @return A source of IoT messages
     */
-  def source(options: SourceOptions): Source[MessageFromDevice, NotUsed] = {
+  def source(options: SourceOptions): Source[EventHubMessage, NotUsed] = {
 
     // Load the partition offset saved in the checkpoint storage
     val savedOffset = if (!options.isFromSavedOffsets)
@@ -83,9 +83,9 @@ private[reactiveeventhubs] case class EventHubPartition(config: IConfiguration, 
 
     // Build the source starting by time or by offset
     val source = if (withTimeOffset)
-                   MessageFromDeviceSource(config, partition, startTime).filter(Ignore.keepAlive)
+                   EventHubMessageSource(config, partition, startTime).filter(Ignore.keepAlive)
                  else
-                   MessageFromDeviceSource(config, partition, startOffsets.get).filter(Ignore.keepAlive)
+      EventHubMessageSource(config, partition, startOffsets.get).filter(Ignore.keepAlive)
 
     // Inject a flow to store the stream position after each pull
     if (options.isSaveOffsets) {

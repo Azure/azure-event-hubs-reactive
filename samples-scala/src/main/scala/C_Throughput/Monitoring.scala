@@ -18,7 +18,7 @@ import scala.language.postfixOps
 object Monitoring {
 
   // Auxiliary vars
-  private[this] val iotHubPartitions    = ConfigFactory.load().getInt("iothub-react.connection.hubPartitions")
+  private[this] val iotHubPartitions    = ConfigFactory.load().getInt("eventhub-react.connection.hubPartitions")
   private[this] var previousTime : Long = 0
   private[this] var previousTotal: Long = 0
 

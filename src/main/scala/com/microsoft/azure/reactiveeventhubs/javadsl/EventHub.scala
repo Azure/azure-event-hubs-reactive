@@ -7,17 +7,17 @@ import java.time.Instant
 import akka.NotUsed
 import akka.stream.javadsl.{Source ⇒ JavaSource}
 import com.microsoft.azure.reactiveeventhubs.config.{Configuration, IConfiguration}
-import com.microsoft.azure.reactiveeventhubs.scaladsl.{EventHub ⇒ IoTHubScalaDSL}
-import com.microsoft.azure.reactiveeventhubs.{MessageFromDevice, SourceOptions}
+import com.microsoft.azure.reactiveeventhubs.scaladsl.{EventHub => EventHubDsl}
+import com.microsoft.azure.reactiveeventhubs.{EventHubMessage, SourceOptions}
 
-/** Provides a streaming source to retrieve messages from Azure IoT Hub
+/** Provides a streaming source to retrieve messages from Azure Event Hub
   */
 class EventHub(config: IConfiguration) {
 
   // Parameterless ctor
   def this() = this(Configuration())
 
-  private lazy val iotHub = IoTHubScalaDSL(config)
+  private lazy val iotHub = EventHubDsl(config)
 
   /** Stop the stream
     */
@@ -26,9 +26,9 @@ class EventHub(config: IConfiguration) {
   /** Stream returning all the messages since the beginning, from all the
     * configured partitions.
     *
-    * @return A source of IoT messages
+    * @return A source of Event hub messages
     */
-  def source(): JavaSource[MessageFromDevice, NotUsed] = new JavaSource(iotHub.source())
+  def source(): JavaSource[EventHubMessage, NotUsed] = new JavaSource(iotHub.source())
 
   /** Stream returning all the messages from all the requested partitions.
     * If checkpointing the stream starts from the last position saved, otherwise
@@ -36,9 +36,9 @@ class EventHub(config: IConfiguration) {
     *
     * @param partitions Partitions to process
     *
-    * @return A source of IoT messages
+    * @return A source of Event hub messages
     */
-  def source(partitions: java.util.List[java.lang.Integer]): JavaSource[MessageFromDevice, NotUsed] = {
+  def source(partitions: java.util.List[java.lang.Integer]): JavaSource[EventHubMessage, NotUsed] = {
     new JavaSource(iotHub.source(SourceOptions().partitions(partitions)))
   }
 
@@ -47,9 +47,9 @@ class EventHub(config: IConfiguration) {
     *
     * @param startTime Starting position expressed in time
     *
-    * @return A source of IoT messages
+    * @return A source of Event hub messages
     */
-  def source(startTime: Instant): JavaSource[MessageFromDevice, NotUsed] = {
+  def source(startTime: Instant): JavaSource[EventHubMessage, NotUsed] = {
     new JavaSource(iotHub.source(startTime))
   }
 
@@ -57,9 +57,9 @@ class EventHub(config: IConfiguration) {
     *
     * @param options Set of streaming options
     *
-    * @return A source of IoT messages
+    * @return A source of Event hub messages
     */
-  def source(options: SourceOptions): JavaSource[MessageFromDevice, NotUsed] = {
+  def source(options: SourceOptions): JavaSource[EventHubMessage, NotUsed] = {
     new JavaSource(iotHub.source(options))
   }
 }

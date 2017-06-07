@@ -15,38 +15,38 @@ import scala.collection.JavaConverters._
 import scala.concurrent.duration._
 import scala.language.{implicitConversions, postfixOps}
 
-private object MessageFromDeviceSource {
+private object EventHubMessageSource {
 
   /** Create an instance of the messages source for the specified partition
     *
-    * @param partition IoT hub partition to read
+    * @param partition Event hub partition to read
     * @param offset    Starting position, offset of the first message
     *
     * @return A source returning the body of the message sent from a device.
     *         Deserialization is left to the consumer.
     */
-  def apply(config: IConfiguration, partition: Int, offset: String): Source[MessageFromDevice, NotUsed] = {
-    Source.fromGraph(new MessageFromDeviceSource(config, partition, offset))
+  def apply(config: IConfiguration, partition: Int, offset: String): Source[EventHubMessage, NotUsed] = {
+    Source.fromGraph(new EventHubMessageSource(config, partition, offset))
   }
 
   /** Create an instance of the messages source for the specified partition
     *
-    * @param partition IoT hub partition to read
+    * @param partition Event hub partition to read
     * @param startTime Starting position expressed in time
     *
     * @return A source returning the body of the message sent from a device.
     *         Deserialization is left to the consumer.
     */
-  def apply(config: IConfiguration, partition: Int, startTime: Instant): Source[MessageFromDevice, NotUsed] = {
-    Source.fromGraph(new MessageFromDeviceSource(config, partition, startTime))
+  def apply(config: IConfiguration, partition: Int, startTime: Instant): Source[EventHubMessage, NotUsed] = {
+    Source.fromGraph(new EventHubMessageSource(config, partition, startTime))
   }
 }
 
-/** Source of messages from one partition of the IoT hub storage
+/** Source of messages from one partition of the EventHubs service
   */
-private class MessageFromDeviceSource(config: IConfiguration) extends GraphStage[SourceShape[MessageFromDevice]] with Logger {
+private class EventHubMessageSource(config: IConfiguration) extends GraphStage[SourceShape[EventHubMessage]] with Logger {
 
-  /** Source of messages from one partition of the IoT hub storage
+  /** Source of messages from one partition of the EventHubs service
     *
     * @param partition Partition number (0 to N-1) to read from
     * @param offset    Starting position
@@ -58,7 +58,7 @@ private class MessageFromDeviceSource(config: IConfiguration) extends GraphStage
     offsetType = SequenceOffset
   }
 
-  /** Source of messages from one partition of the IoT hub storage
+  /** Source of messages from one partition of the EventHubs service
     *
     * @param partition Partition number (0 to N-1) to read from
     * @param startTime Starting position
@@ -96,22 +96,22 @@ private class MessageFromDeviceSource(config: IConfiguration) extends GraphStage
   private[this] def startTime: Instant = _startTime.get
 
   // Define the (sole) output port of this stage
-  private[this] val out: Outlet[MessageFromDevice] = Outlet("MessageFromDeviceSource")
+  private[this] val out: Outlet[EventHubMessage] = Outlet("EventHubMessageSource")
 
   // Define the shape of this stage ⇒ SourceShape with the port defined above
-  override val shape: SourceShape[MessageFromDevice] = SourceShape(out)
+  override val shape: SourceShape[EventHubMessage] = SourceShape(out)
 
   // All state MUST be inside the GraphStageLogic, never inside the enclosing
   // GraphStage. This state is safe to read/write from all the callbacks
   // provided by GraphStageLogic and the registered handlers.
   override def createLogic(attr: Attributes): GraphStageLogic = {
-    log.debug("Creating the IoT hub source")
+    log.debug("Creating the Event hub source")
     new GraphStageLogic(shape) {
 
-      val keepAliveSignal = new MessageFromDevice(None, None, None)
-      val emptyResult     = List[MessageFromDevice](keepAliveSignal)
+      val keepAliveSignal = new EventHubMessage(None, None, None)
+      val emptyResult     = List[EventHubMessage](keepAliveSignal)
 
-      lazy val receiver = getIoTHubReceiver()
+      lazy val receiver = getEventHubReceiver()
 
       setHandler(
         out, new OutHandler {
@@ -128,7 +128,7 @@ private class MessageFromDeviceSource(config: IConfiguration) extends GraphStage
                 emitMultiple(out, emptyResult)
               } else {
                 val partitionInfo: ReceiverRuntimeInformation = receiver.getRuntimeInformation
-                val iterator = messages.asScala.map(e ⇒ MessageFromDevice(e, Some(partition), Some(partitionInfo))).toList
+                val iterator = messages.asScala.map(e ⇒ EventHubMessage(e, Some(partition), Some(partitionInfo))).toList
                 log.debug("Emitting {} messages", iterator.size)
                 emitMultiple(out, iterator)
               }
@@ -144,11 +144,11 @@ private class MessageFromDeviceSource(config: IConfiguration) extends GraphStage
           }
         })
 
-      /** Connect to the IoT hub storage
+      /** Connect to the EventHubs service
         *
-        * @return IoT hub storage receiver
+        * @return Event Hubs receiver
         */
-      def getIoTHubReceiver(): PartitionReceiver = Retry(3, 2 seconds) {
+      def getEventHubReceiver(): PartitionReceiver = Retry(3, 2 seconds) {
         val receiverOptions = new ReceiverOptions()
         receiverOptions.setReceiverRuntimeMetricEnabled(config.streaming.retrieveRuntimeInfo)
         offsetType match {

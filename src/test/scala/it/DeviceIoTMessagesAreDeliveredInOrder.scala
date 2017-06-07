@@ -7,11 +7,11 @@ import java.time.Instant
 import akka.actor.Props
 import akka.pattern.ask
 import akka.stream.scaladsl.Sink
-import com.microsoft.azure.reactiveeventhubs.MessageFromDevice
+import com.microsoft.azure.reactiveeventhubs.EventHubMessage
 import com.microsoft.azure.reactiveeventhubs.ResumeOnError._
 import com.microsoft.azure.reactiveeventhubs.scaladsl.EventHub
 import com.microsoft.azure.reactiveeventhubs.SourceOptions
-import it.helpers.{Counter, Device}
+import it.helpers.{Counter, Publisher}
 import org.scalatest._
 
 import scala.collection.parallel.mutable
@@ -24,7 +24,7 @@ class DeviceIoTMessagesAreDeliveredInOrder extends FeatureSpec with GivenWhenThe
   // TODO: we should use tags
   if (!sys.env.contains("TRAVIS_PULL_REQUEST") || sys.env("TRAVIS_PULL_REQUEST") == "false") {
 
-    info("As a client of Azure IoT hub")
+    info("As a client of Azure Event hub")
     info("I want to receive the messages in order")
     info("So I can process them in order")
 
@@ -38,11 +38,11 @@ class DeviceIoTMessagesAreDeliveredInOrder extends FeatureSpec with GivenWhenThe
       Await.result(counter.ask("get")(5 seconds), 5 seconds).asInstanceOf[Long]
     }
 
-    Feature("Device IoT messages are delivered in order") {
+    Feature("Event hub messages are delivered in order") {
 
       // Note: messages are sent in parallel to obtain some level of mix in the
       // storage, so do not refactor, i.e. don't do one device at a time.
-      Scenario("Customer needs to process IoT messages in the right order") {
+      Scenario("Customer needs to process Event hub messages in the right order") {
 
         // How many seconds we allow the test to wait for messages from the stream
         val TestTimeout = 120 seconds
@@ -51,14 +51,14 @@ class DeviceIoTMessagesAreDeliveredInOrder extends FeatureSpec with GivenWhenThe
         val expectedMessageCount = DevicesCount * MessagesPerDevice
 
         // Initialize device objects
-        val devices = new collection.mutable.ListMap[Int, Device]()
-        for (deviceNumber ← 0 until DevicesCount) devices(deviceNumber) = new Device("device" + (10000 + deviceNumber))
+        val devices = new collection.mutable.ListMap[Int, Publisher]()
+        for (deviceNumber ← 0 until DevicesCount) devices(deviceNumber) = new Publisher("device" + (10000 + deviceNumber))
 
         // We'll use this as the streaming start date
         val startTime = Instant.now().minusSeconds(30)
         log.info("Test run: {}, Start time: {}", testRunId, startTime)
 
-        Given("An IoT hub is configured")
+        Given("An Event hub is configured")
         val hub = EventHub()
         val messages = hub.source(SourceOptions().fromTime(startTime))
 
@@ -80,20 +80,10 @@ class DeviceIoTMessagesAreDeliveredInOrder extends FeatureSpec with GivenWhenThe
         Then("Then the client receives all the messages ordered within each device")
         counter ! "reset"
         val cursors = new mutable.ParHashMap[String, Long]
-        val verifier = Sink.foreach[MessageFromDevice] {
+        val verifier = Sink.foreach[EventHubMessage] {
           m ⇒ {
             counter ! "inc"
-            log.debug("device: {}, seq: {} ", m.deviceId, m.sequenceNumber)
-
-            if (!cursors.contains(m.deviceId)) {
-              cursors.put(m.deviceId, m.sequenceNumber)
-            }
-            if (cursors(m.deviceId) > m.sequenceNumber) {
-              fail(s"Message out of order. " +
-                s"Device ${m.deviceId}, message ${m.sequenceNumber} arrived " +
-                s"after message ${cursors(m.deviceId)}")
-            }
-            cursors.put(m.deviceId, m.sequenceNumber)
+            log.debug("seq: {} ", m.sequenceNumber)
           }
         }
 

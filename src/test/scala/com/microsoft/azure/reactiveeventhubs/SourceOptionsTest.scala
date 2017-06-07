@@ -12,15 +12,15 @@ import org.scalatest.mockito.MockitoSugar
 
 class SourceOptionsTest extends FeatureSpec with MockitoSugar {
 
-  info("As a developer streaming data from Azure IoT Hub")
+  info("As a developer streaming data from Azure Event Hub")
   info("I can set streaming options using a flexible DSL")
-  info("So that I can use all IoT Hub React features")
+  info("So that I can use all Event Hub React features")
 
   Feature("The settings are consistent with user request") {
 
     val pcount = 6
     val conf = mock[IConnectConfiguration]
-    when(conf.iotHubPartitions).thenReturn(pcount)
+    when(conf.eventHubPartitions).thenReturn(pcount)
 
     Scenario("Default settings") {
       val o: SourceOptions = SourceOptions()

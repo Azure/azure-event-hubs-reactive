@@ -6,13 +6,8 @@ import java.time.Instant
 
 import akka.stream.scaladsl.Sink
 import com.microsoft.azure.reactiveeventhubs.ResumeOnError._
-import com.microsoft.azure.reactiveeventhubs.filters._
 import com.microsoft.azure.reactiveeventhubs.scaladsl._
-import com.microsoft.azure.reactiveeventhubs.{MessageFromDevice, SourceOptions}
-import com.microsoft.azure.reactiveeventhubs.{MessageToDevice, SourceOptions}
-import com.microsoft.azure.reactiveeventhubs.filters.MessageSchema
-import com.microsoft.azure.sdk.iot.service.DeliveryAcknowledgement
-
+import com.microsoft.azure.reactiveeventhubs.{EventHubMessage, SourceOptions}
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration._
 import scala.language.{implicitConversions, postfixOps}
@@ -25,8 +20,8 @@ object AllMessagesFromBeginning extends App {
 
   val messages = EventHub().source()
 
-  val console = Sink.foreach[MessageFromDevice] {
-    m ⇒ println(s"${m.received} - ${m.deviceId} - ${m.messageSchema} - ${m.contentAsString}")
+  val console = Sink.foreach[EventHubMessage] {
+    m ⇒ println(s"${m.received} - ${m.contentAsString}")
   }
 
   messages
@@ -44,8 +39,8 @@ object OnlyRecentMessages extends App {
 
   val messages = EventHub().source(java.time.Instant.now())
 
-  val console = Sink.foreach[MessageFromDevice] {
-    m ⇒ println(s"${m.received} - ${m.deviceId} - ${m.messageSchema} - ${m.contentAsString}")
+  val console = Sink.foreach[EventHubMessage] {
+    m ⇒ println(s"${m.received} - ${m.contentAsString}")
   }
 
   messages
@@ -66,8 +61,8 @@ object OnlyTwoPartitions extends App {
 
   val messages = EventHub().source(Seq(Partition1, Partition2))
 
-  val console = Sink.foreach[MessageFromDevice] {
-    m ⇒ println(s"${m.received} - ${m.deviceId} - ${m.messageSchema} - ${m.contentAsString}")
+  val console = Sink.foreach[EventHubMessage] {
+    m ⇒ println(s"${m.received} - ${m.contentAsString}")
   }
 
   messages
@@ -85,8 +80,8 @@ object StoreOffsetsWhileStreaming extends App {
 
   val messages = EventHub().source(SourceOptions().saveOffsets())
 
-  val console = Sink.foreach[MessageFromDevice] {
-    m ⇒ println(s"${m.received} - ${m.deviceId} - ${m.messageSchema} - ${m.contentAsString}")
+  val console = Sink.foreach[EventHubMessage] {
+    m ⇒ println(s"${m.received} - ${m.contentAsString}")
   }
 
   messages
@@ -104,8 +99,8 @@ object StartFromStoredOffsetsButDontWriteNewOffsets extends App {
 
   val messages = EventHub().source(SourceOptions().fromSavedOffsets())
 
-  val console = Sink.foreach[MessageFromDevice] {
-    m ⇒ println(s"${m.received} - ${m.deviceId} - ${m.messageSchema} - ${m.contentAsString}")
+  val console = Sink.foreach[EventHubMessage] {
+    m ⇒ println(s"${m.received} - ${m.contentAsString}")
   }
 
   messages
@@ -124,8 +119,8 @@ object StartFromStoredOffsetsIfAvailableOrByTimeOtherwise extends App {
 
   val messages = EventHub().source(SourceOptions().fromSavedOffsets(Instant.now().minusSeconds(3600)))
 
-  val console = Sink.foreach[MessageFromDevice] {
-    m ⇒ println(s"${m.received} - ${m.deviceId} - ${m.messageSchema} - ${m.contentAsString}")
+  val console = Sink.foreach[EventHubMessage] {
+    m ⇒ println(s"${m.received} - ${m.contentAsString}")
   }
 
   messages
@@ -141,7 +136,7 @@ object StreamIncludingRuntimeInformation extends App {
 
   val messages = EventHub().source(SourceOptions().fromStart().withRuntimeInfo())
 
-  val console = Sink.foreach[MessageFromDevice] {
+  val console = Sink.foreach[EventHubMessage] {
     m ⇒ println(s"Partition ${m.runtimeInfo.partitionInfo.partitionNumber.get}: " +
       s"${m.runtimeInfo.partitionInfo.lastSequenceNumber.get - m.sequenceNumber} messages left to stream")
   }
@@ -164,8 +159,8 @@ object MultipleStreamingOptionsAndSyntaxSugar extends App {
 
   val messages = EventHub().source(options)
 
-  val console = Sink.foreach[MessageFromDevice] {
-    m ⇒ println(s"${m.received} - ${m.deviceId} - ${m.messageSchema} - ${m.contentAsString}")
+  val console = Sink.foreach[EventHubMessage] {
+    m ⇒ println(s"${m.received} - ${m.contentAsString}")
   }
 
   messages
@@ -183,12 +178,12 @@ object MultipleDestinations extends App {
 
   val messages = EventHub().source(java.time.Instant.now())
 
-  val console1 = Sink.foreach[MessageFromDevice] {
-    m ⇒ if (m.messageSchema == "temperature") println(s"Temperature console: ${m.received} - ${m.deviceId} - ${m.contentAsString}")
+  val console1 = Sink.foreach[EventHubMessage] {
+    m ⇒ println(s"Temperature console: ${m.received} - ${m.contentAsString}")
   }
 
-  val console2 = Sink.foreach[MessageFromDevice] {
-    m ⇒ if (m.messageSchema == "humidity") println(s"Humidity console: ${m.received} - ${m.deviceId} - ${m.contentAsString}")
+  val console2 = Sink.foreach[EventHubMessage] {
+    m ⇒ println(s"Humidity console: ${m.received} - ${m.contentAsString}")
   }
 
   messages
@@ -196,49 +191,6 @@ object MultipleDestinations extends App {
     .alsoTo(console1)
 
     .to(console2)
-
-    .run()
-}
-
-/** Stream only temperature messages
-  */
-object FilterByMessageSchema extends App {
-
-  println("Streaming only temperature messages")
-
-  val messages = EventHub().source()
-
-  val console = Sink.foreach[MessageFromDevice] {
-    m ⇒ println(s"${m.received} - ${m.deviceId} - ${m.messageSchema} - ${m.contentAsString}")
-  }
-
-  messages
-
-    .filter(MessageSchema("temperature")) // Equivalent to: m ⇒ m.messageSchema == "temperature"
-
-    .to(console)
-
-    .run()
-}
-
-/** Stream only messages from "device1000"
-  */
-object FilterByDeviceID extends App {
-
-  val DeviceID = "device1000"
-
-  println(s"Streaming only messages from ${DeviceID}")
-
-  val messages = EventHub().source()
-
-  val console = Sink.foreach[MessageFromDevice] {
-    m ⇒ println(s"${m.received} - ${m.deviceId} - ${m.messageSchema} - ${m.contentAsString}")
-  }
-
-  messages
-    .filter(Device(DeviceID)) // Equivalent to: m ⇒ m.deviceId == DeviceID
-
-    .to(console)
 
     .run()
 }
@@ -258,31 +210,9 @@ object CloseStream extends App {
   val hub      = EventHub()
   val messages = hub.source()
 
-  var console = Sink.foreach[MessageFromDevice] {
-    m ⇒ println(s"${m.received} - ${m.deviceId} - ${m.messageSchema} - ${m.contentAsString}")
+  var console = Sink.foreach[EventHubMessage] {
+    m ⇒ println(s"${m.received} - ${m.contentAsString}")
   }
 
   messages.to(console).run()
-}
-
-/** Send a message to a device
-  */
-object SendMessageToDevice extends App with Deserialize {
-
-  val message = MessageToDevice("Turn fan ON")
-    .addProperty("speed", "high")
-    .addProperty("duration", "60")
-    .expiry(Instant.now().plusSeconds(30))
-    .ack(DeliveryAcknowledgement.Full)
-
-  val hub = EventHub()
-
-  hub
-    .source(java.time.Instant.now())
-    .filter(MessageSchema("temperature"))
-    .map(deserialize)
-    .filter(_.value > 15)
-    .map(t ⇒ message.to(t.deviceId))
-    .to(hub.sink())
-    .run()
 }

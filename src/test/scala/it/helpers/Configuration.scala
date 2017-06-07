@@ -16,8 +16,8 @@ object Configuration {
   // JSON parser setup, brings in default date formats etc.
   implicit val formats = DefaultFormats
 
-  private[this] val confConnPath      = "iothub-react.connection."
-  private[this] val confStreamingPath = "iothub-react.streaming."
+  private[this] val confConnPath      = "eventhub-react.connection."
+  private[this] val confStreamingPath = "eventhub-react.streaming."
 
   private[this] val conf: Config = ConfigFactory.load()
 

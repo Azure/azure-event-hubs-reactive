@@ -27,9 +27,9 @@ private[reactiveeventhubs] object CheckpointService {
 }
 
 /** Checkpointing agent. Takes care of initializing the right storage, reading and writing to it.
-  * Each agent instance work on a single IoT hub partition
+  * Each agent instance work on a single Event hub partition
   *
-  * @param partition IoT hub partition number [0..N]
+  * @param partition Event hub partition number [0..N]
   */
 private[reactiveeventhubs] class CheckpointService(cpconfig: ICPConfiguration, partition: Int)
   extends Actor

@@ -12,14 +12,14 @@ private case class EventHubStorage(config: IConnectConfiguration) extends Logger
   // EventHubClient.createFromConnectionString(connString)
   //   .get(config.receiverTimeout, TimeUnit.MILLISECONDS)
   def createClient(): EventHubClient = {
-    log.info("Creating EventHub client to {}", config.iotHubName)
+    log.info("Creating EventHub client to {}", config.eventHubName)
     EventHubClient.createFromConnectionStringSync(buildConnString())
   }
 
   private[this] def buildConnString() =
     new ConnectionStringBuilder(
-      config.iotHubNamespace,
-      config.iotHubName,
+      config.eventHubNamespace,
+      config.eventHubName,
       config.accessPolicy,
       config.accessKey).toString
 }

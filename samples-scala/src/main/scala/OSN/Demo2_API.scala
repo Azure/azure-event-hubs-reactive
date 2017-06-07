@@ -3,18 +3,16 @@
 package OSN.Demo.More
 
 import akka.stream.scaladsl.Sink
-import com.microsoft.azure.reactiveeventhubs.MessageFromDevice
-import com.microsoft.azure.reactiveeventhubs.filters.Device
+import com.microsoft.azure.reactiveeventhubs.EventHubMessage
 import com.microsoft.azure.reactiveeventhubs.scaladsl.EventHub
 import com.microsoft.azure.reactiveeventhubs.ResumeOnError._
-import com.microsoft.azure.reactiveeventhubs.filters.MessageSchema
 
 object Console {
 
-  def apply() = Sink.foreach[MessageFromDevice] {
+  def apply() = Sink.foreach[EventHubMessage] {
 
     m ⇒ println(
-      s"${m.received} - ${m.deviceId} - ${m.messageSchema}"
+      s"${m.received} "
         + s" - ${m.contentAsString}")
 
   }
@@ -22,7 +20,7 @@ object Console {
 
 object Storage {
 
-  def apply() = Sink.foreach[MessageFromDevice] {
+  def apply() = Sink.foreach[EventHubMessage] {
 
     m ⇒ {
       /* ... write to storage ... */
@@ -36,14 +34,7 @@ object Demo extends App {
   EventHub()
 
     .source(java.time.Instant.now()) // <===
-
-    .filter(MessageSchema("temperature")) // <===
-
-    .filter(Device("device1000")) // <===
-
     .alsoTo(Storage()) // <===
-
     .to(Console())
-
     .run()
 }

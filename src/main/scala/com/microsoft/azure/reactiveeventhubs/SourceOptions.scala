@@ -32,7 +32,7 @@ class SourceOptions() {
   private[this] var _isSaveOffsets          : Boolean             = false
   private[this] var _isWithRuntimeInfo      : Boolean             = false
 
-  /** Set the options to retrieve events from all the Hub partitions
+  /** Set the options to retrieve events from all the Event Hubs partitions
     *
     * @return Current instance
     */
@@ -42,7 +42,7 @@ class SourceOptions() {
     this
   }
 
-  /** Define from which Hub partitions to retrieve events
+  /** Define from which Event Hubs partitions to retrieve events
     *
     * @param values List of partitions
     *
@@ -54,7 +54,7 @@ class SourceOptions() {
     this
   }
 
-  /** Define from which Hub partitions to retrieve events
+  /** Define from which Event Hubs partitions to retrieve events
     *
     * @param values List of partitions
     *
@@ -62,7 +62,7 @@ class SourceOptions() {
     */
   def partitions(values: Seq[Int]): SourceOptions = partitions(values: _ *)
 
-  /** Define from which Hub partitions to retrieve events
+  /** Define from which Event Hubs partitions to retrieve events
     *
     * @param values List of partitions
     *
@@ -70,9 +70,9 @@ class SourceOptions() {
     */
   def partitions(values: java.util.List[java.lang.Integer]): SourceOptions = partitions(values.asScala.map(_.intValue()))
 
-  /** Define from which Hub partitions to retrieve events
+  /** Define from which Event Hubs partitions to retrieve events
     *
-    * @param values List of partitions
+    * @param values List of Event Hubs partitions
     *
     * @return Current instance
     */
@@ -153,7 +153,7 @@ class SourceOptions() {
 
   /** Set the options to start streaming for the saved offsets
     *
-    * @param startTimeIfMissing
+    * @param startTimeIfMissing start time
     *
     * @return Current instance
     */
@@ -177,7 +177,7 @@ class SourceOptions() {
     this
   }
 
-  /** Set the options to include Hub runtime information in the stream
+  /** Set the options to include Event Hubs runtime information in the stream
     *
     * @return Current instance
     */
@@ -192,18 +192,18 @@ class SourceOptions() {
 
   private[reactiveeventhubs] def getStartOffsets(config: IConnectConfiguration): Seq[String] = {
     if (!_isFromOffsets)
-      List.fill[String](config.iotHubPartitions)(EventHubPartition.OffsetStartOfStream)
+      List.fill[String](config.eventHubPartitions)(EventHubPartition.OffsetStartOfStream)
     else {
-      if (_startOffsets.get.size != config.iotHubPartitions)
+      if (_startOffsets.get.size != config.eventHubPartitions)
         throw new RuntimeException(s"The number of stream offsets [${_startOffsets.get.size}] " +
-          s"differs from the number of partitions [${config.iotHubPartitions}]")
+          s"differs from the number of partitions [${config.eventHubPartitions}]")
 
       _startOffsets.get
     }
   }
 
   private[reactiveeventhubs] def getPartitions(config: IConnectConfiguration): Seq[Int] = {
-    if (_allPartitions) 0 until config.iotHubPartitions
+    if (_allPartitions) 0 until config.eventHubPartitions
     else _partitions.get
   }
 

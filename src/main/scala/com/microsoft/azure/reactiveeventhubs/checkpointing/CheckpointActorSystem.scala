@@ -11,13 +11,13 @@ import scala.language.{implicitConversions, postfixOps}
   */
 private[reactiveeventhubs] case class CheckpointActorSystem(cpconfig: ICPConfiguration) {
 
-  implicit private[this] val actorSystem  = ActorSystem("IoTHubReact")
+  implicit private[this] val actorSystem  = ActorSystem("EventHubReact")
   implicit private[this] val materializer = ActorMaterializer(ActorMaterializerSettings(actorSystem))
   var localRegistry: Map[String, ActorRef] = Map[String, ActorRef]()
 
   /** Create an actor to read/write offset checkpoints from the storage
     *
-    * @param partition IoT hub partition number
+    * @param partition Event hub partition number
     *
     * @return Actor reference
     */
