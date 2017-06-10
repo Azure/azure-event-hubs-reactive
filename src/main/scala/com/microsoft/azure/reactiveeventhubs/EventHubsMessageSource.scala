@@ -15,7 +15,7 @@ import scala.collection.JavaConverters._
 import scala.concurrent.duration._
 import scala.language.{implicitConversions, postfixOps}
 
-private object EventHubsMessageStream {
+private object EventHubsMessageSource {
 
   /** Create an instance of the messages source for the specified partition
     *
@@ -26,7 +26,7 @@ private object EventHubsMessageStream {
     *         Deserialization is left to the consumer.
     */
   def apply(config: IConfiguration, partition: Int, offset: String): Source[EventHubsMessage, NotUsed] = {
-    Source.fromGraph(new EventHubsMessageStream(config, partition, offset))
+    Source.fromGraph(new EventHubsMessageSource(config, partition, offset))
   }
 
   /** Create an instance of the messages source for the specified partition
@@ -38,13 +38,13 @@ private object EventHubsMessageStream {
     *         Deserialization is left to the consumer.
     */
   def apply(config: IConfiguration, partition: Int, startTime: Instant): Source[EventHubsMessage, NotUsed] = {
-    Source.fromGraph(new EventHubsMessageStream(config, partition, startTime))
+    Source.fromGraph(new EventHubsMessageSource(config, partition, startTime))
   }
 }
 
 /** Source of messages from one partition of the EventHubs service
   */
-private class EventHubsMessageStream(config: IConfiguration) extends GraphStage[SourceShape[EventHubsMessage]] with Logger {
+private class EventHubsMessageSource(config: IConfiguration) extends GraphStage[SourceShape[EventHubsMessage]] with Logger {
 
   /** Source of messages from one partition of the EventHubs service
     *
@@ -96,7 +96,7 @@ private class EventHubsMessageStream(config: IConfiguration) extends GraphStage[
   private[this] def startTime: Instant = _startTime.get
 
   // Define the (sole) output port of this stage
-  private[this] val out: Outlet[EventHubsMessage] = Outlet("EventHubsMessageStream")
+  private[this] val out: Outlet[EventHubsMessage] = Outlet("EventHubsMessageSource")
 
   // Define the shape of this stage ⇒ SourceShape with the port defined above
   override val shape: SourceShape[EventHubsMessage] = SourceShape(out)

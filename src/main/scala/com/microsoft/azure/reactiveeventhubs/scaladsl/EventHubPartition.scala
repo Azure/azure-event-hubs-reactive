@@ -82,9 +82,9 @@ private[reactiveeventhubs] case class EventHubPartition(config: IConfiguration, 
 
     // Build the source starting by time or by offset
     val source = if (withTimeOffset)
-                   EventHubsMessageStream(config, partition, startTime)
+                    EventHubsMessageSource(config, partition, startTime)
                  else
-                    EventHubsMessageStream(config, partition, startOffsets.get)
+                    EventHubsMessageSource(config, partition, startOffsets.get)
 
     // Inject a flow to store the stream position after each pull
     if (options.isSaveOffsets) {
