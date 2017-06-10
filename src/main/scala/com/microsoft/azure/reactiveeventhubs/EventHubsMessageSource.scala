@@ -125,7 +125,7 @@ private class EventHubsMessageSource(config: IConfiguration) extends GraphStage[
 
               if (messages == null) {
                 log.debug("Partition {} is empty", partition)
-                emitMultiple(out, emptyResult)
+                this.onPull()
               } else {
                 val partitionInfo: ReceiverRuntimeInformation = receiver.getRuntimeInformation
                 val iterator = messages.asScala.map(e ⇒ EventHubsMessage(e, Some(partition), Some(partitionInfo))).toList
