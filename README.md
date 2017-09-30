@@ -141,29 +141,6 @@ providing more control on the checkpointing logic.
 For more information about the checkpointing feature,
 [please read here](checkpointing.md).
 
-## Build configuration
-
-Reactive Event Hubs is available in Maven Central for Scala 2.11 and 2.12. To
-import the library into your project, add the following reference in your
-`build.sbt` file:
-
-```libraryDependencies += "com.microsoft.azure" %% "reactive-event-hubs" % "0.9.0"```
-
-or this dependency in `pom.xml` file when working with Maven:
-
-```xml
-<dependency>
-    <groupId>com.microsoft.azure</groupId>
-    <artifactId>reactive-event-hubs_2.12</artifactId>
-    <version>0.9.0</version>
-</dependency>
-```
-
-Reactive Event Hubs internally uses some libraries like Azure Storage SDK,
-Akka etc. If your project depends on these libraries too, your can override the
-versions, explicitly importing the packages in your `build.sbt` and `pom.xml`
-files. If you encounter some incompatibility with future versions of these,
-please let us know opening an issue, or sending a PR.
 
 ### Event Hub configuration
 
