@@ -4,7 +4,7 @@ package com.microsoft.azure.reactiveeventhubs
 
 import com.microsoft.azure.eventhubs.EventHubClient
 import com.microsoft.azure.reactiveeventhubs.config.IConnectConfiguration
-import com.microsoft.azure.servicebus.ConnectionStringBuilder
+import com.microsoft.azure.eventhubs.ConnectionStringBuilder
 
 private case class EventHubsConnector(config: IConnectConfiguration) extends Logger {
 

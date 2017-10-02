@@ -278,25 +278,6 @@ The demos can be executed using the scripts included in the root folder
 * [`run_scala_samples.sh`](run_scala_samples.sh): execute Scala demos
 * [`run_java_samples.sh`](run_java_samples.sh): execute Java demos
 
-## Future work
-
-* support at-least-once when checkpointing
-* use EventHub SDK async APIs
-
-# Contributing
-
-## Contribution license Agreement
-
-If you want/plan to contribute, we ask you to sign a
-[CLA](https://cla.microsoft.com/) (Contribution license Agreement). A friendly
-bot will remind you about it when you submit a pull-request.
-
-## Code style
-
-If you are sending a pull request, please check the code style with IntelliJ
-IDEA, importing the settings from
-[`Codestyle.IntelliJ.xml`](codestyle.intellij.xml).
-
 ## Running the tests
 
 You can use the included `build.sh` script to execute all the unit and

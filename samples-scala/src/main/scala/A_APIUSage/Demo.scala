@@ -118,6 +118,8 @@ object StartFromStoredOffsetsIfAvailableOrByTimeOtherwise extends App {
     .run()
 }
 
+/** Streaming messages from the beginning of the stream and retrieve runtime information
+  */
 object StreamIncludingRuntimeInformation extends App {
 
   println(s"Stream messages and print how many messages are left in each partition.")

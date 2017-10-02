@@ -6,7 +6,7 @@ import java.time.Instant
 
 import com.microsoft.azure.eventhubs.{EventHubClient, PartitionReceiver}
 import com.microsoft.azure.reactiveeventhubs.ResumeOnError._
-import com.microsoft.azure.servicebus.ConnectionStringBuilder
+import com.microsoft.azure.eventhubs.ConnectionStringBuilder
 import it.helpers.{Configuration, Publisher}
 import org.scalatest._
 

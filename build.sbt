@@ -1,9 +1,9 @@
 // Copyright (c) Microsoft. All rights reserved.
 
-name := "reactive-event-hubs"
+name := "azure-event-hubs-reactive"
 organization := "com.microsoft.azure"
 
-version := "0.9.0"
+version := "0.1.0"
 
 scalaVersion := "2.12.1"
 crossScalaVersions := Seq("2.11.8", "2.12.1")
@@ -11,7 +11,7 @@ crossScalaVersions := Seq("2.11.8", "2.12.1")
 libraryDependencies ++= {
   Seq(
     // https://github.com/Azure/azure-event-hubs-java/releases
-    "com.microsoft.azure" % "azure-eventhubs" % "0.13.0",
+    "com.microsoft.azure" % "azure-eventhubs" % "0.15.0",
 
     // https://github.com/Azure/azure-storage-java/releases
     "com.microsoft.azure" % "azure-storage" % "5.0.0",
@@ -63,13 +63,6 @@ pomExtra :=
       <developer>
         <id>microsoft</id>
         <name>Microsoft</name>
-        <organization>Microsoft</organization>
-        <organizationUrl>http://www.microsoft.com</organizationUrl>
-      </developer>
-      <developer>
-        <id>dluc</id>
-        <name>Devis Lucato</name>
-        <url>https://github.com/dluc</url>
         <organization>Microsoft</organization>
         <organizationUrl>http://www.microsoft.com</organizationUrl>
       </developer>
