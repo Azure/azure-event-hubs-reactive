@@ -1,9 +1,9 @@
 // Copyright (c) Microsoft. All rights reserved.
 
-name := "azure-event-hubs-reactive"
+name := "azure-eventhubs-reactive"
 organization := "com.microsoft.azure"
 
-version := "0.1.0"
+version := "0.5.0"
 
 scalaVersion := "2.12.1"
 crossScalaVersions := Seq("2.11.8", "2.12.1")

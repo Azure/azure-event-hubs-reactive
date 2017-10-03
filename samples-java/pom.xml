@@ -5,15 +5,22 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.microsoft.azure</groupId>
-    <artifactId>azure-event-hubs-reactive-demo</artifactId>
+    <artifactId>azure-eventhubs-reactive-demo</artifactId>
     <version>0.1.0</version>
+
+    <!--<repositories>
+        <repository>
+            <id>commicrosoftazure</id>
+             <url>https://oss.sonatype.org/content/repositories/commicrosoftazure-2030/</url>
+        </repository>
+    </repositories>-->
 
     <dependencies>
         <!-- TODO: fix `sbt samplesJava/run` and remove this dependency, using the source code instead -->
         <dependency>
             <groupId>com.microsoft.azure</groupId>
-            <artifactId>azure-event-hubs-reactive_2.12</artifactId>
-            <version>0.1.0</version>
+            <artifactId>azure-eventhubs-reactive_2.12</artifactId>
+            <version>0.5.0</version>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
